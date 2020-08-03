@@ -1,15 +1,15 @@
 package com.anikinkirill.powerfulandroidapp.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import kotlinx.android.synthetic.main.fragment_launcher.*
 
-class LauncherFragment : Fragment() {
+class LauncherFragment : BaseAuthFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +21,8 @@ class LauncherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d(TAG, "onViewCreated: LauncherFragment: ${authViewModel.hashCode()}")
 
         login.setOnClickListener {
             navLogin()

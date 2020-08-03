@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp
 
+import com.anikinkirill.powerfulandroidapp.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 
