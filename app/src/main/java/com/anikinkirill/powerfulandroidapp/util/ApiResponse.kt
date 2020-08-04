@@ -36,7 +36,7 @@ open class ApiResponse<T> {
     ) : ApiResponse<T>()
 
     data class ApiErrorResponse<T>(
-        private var errorMessage: String
+        var errorMessage: String
     ) : ApiResponse<T>()
 
     class ApiEmptyResponse<T> : ApiResponse<T>()
