@@ -7,6 +7,7 @@ import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
 import com.anikinkirill.powerfulandroidapp.persitence.AppDatabase
 import com.anikinkirill.powerfulandroidapp.persitence.AppDatabase.Companion.DATABASE_NAME
 import com.anikinkirill.powerfulandroidapp.persitence.AuthTokenDao
+import com.anikinkirill.powerfulandroidapp.util.Constants
 import com.anikinkirill.powerfulandroidapp.util.LiveDataCallAdapterFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -62,7 +63,7 @@ class AppModule {
     @Provides
     fun provideRetrofitInstance(gson: Gson) : Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://open-api.xyz/")
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .build()
