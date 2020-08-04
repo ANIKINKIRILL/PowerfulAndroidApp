@@ -52,10 +52,10 @@ class Event<T>(private val content: T) {
             return null
         }
 
-        // we don't want an event if there is no message
-        fun messageEvent(message: String?): Event<String>?{
-            message?.let{
-                return Event(message)
+        // we don't want an event if the response is null
+        fun responseEvent(response: Response?): Event<Response>?{
+            response?.let{
+                return Event(response)
             }
             return null
         }
