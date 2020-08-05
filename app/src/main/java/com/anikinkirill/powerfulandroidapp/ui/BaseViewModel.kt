@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
     private val _stateEvent = MutableLiveData<StateEvent>()
-    private val _viewState = MutableLiveData<ViewState>()
+    val _viewState = MutableLiveData<ViewState>()
 
     val viewState get() = _viewState
 
@@ -18,7 +18,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
         }
     }
 
-    private fun getCurrentViewStateOrNew() : ViewState {
+    fun getCurrentViewStateOrNew() : ViewState {
         return viewState.value?.let {
             it
         } ?: initNewViewState()
