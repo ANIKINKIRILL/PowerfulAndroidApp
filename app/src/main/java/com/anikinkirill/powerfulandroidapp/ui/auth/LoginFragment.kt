@@ -1,11 +1,13 @@
 package com.anikinkirill.powerfulandroidapp.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.anikinkirill.powerfulandroidapp.R
+import com.anikinkirill.powerfulandroidapp.ui.auth.state.LoginFields
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : BaseAuthFragment() {
 
@@ -19,8 +21,23 @@ class LoginFragment : BaseAuthFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        subscribeObservers()
+    }
 
-        Log.d(TAG, "onViewCreated: LoginFragment: ${authViewModel.hashCode()}")
+    private fun subscribeObservers() {
+        authViewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewState?.let {
+                it.loginFields?.let { loginFields ->
+                    loginFields.login_email?.let { email -> input_email.setText(email) }
+                    loginFields.login_password?.let { password -> input_password.setText(password) }
+                }
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        authViewModel.setLoginFields(LoginFields(input_email.text.toString(), input_password.text.toString()))
     }
 
 }
