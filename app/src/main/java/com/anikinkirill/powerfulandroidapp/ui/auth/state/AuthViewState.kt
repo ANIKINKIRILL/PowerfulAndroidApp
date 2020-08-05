@@ -1,5 +1,13 @@
 package com.anikinkirill.powerfulandroidapp.ui.auth.state
 
+import com.anikinkirill.powerfulandroidapp.models.AuthToken
+
+data class AuthViewState(
+    var registrationFields: RegistrationFields? = RegistrationFields(),
+    var loginFields: LoginFields? = LoginFields(),
+    var authToken: AuthToken? = null
+)
+
 data class RegistrationFields(
     var registration_email: String? = null,
     var registration_username: String? = null,
