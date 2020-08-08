@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.anikinkirill.powerfulandroidapp.R
+import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.LoginFields
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -22,6 +23,10 @@ class LoginFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
+
+        login_button.setOnClickListener {
+            authViewModel.setStateEvent(AuthStateEvent.LoginAttemptEvent(input_email.text.toString(), input_password.text.toString()))
+        }
     }
 
     private fun subscribeObservers() {

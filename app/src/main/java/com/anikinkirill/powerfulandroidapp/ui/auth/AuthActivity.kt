@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
+import com.anikinkirill.powerfulandroidapp.ui.ResponseType.*
 import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import javax.inject.Inject
@@ -27,6 +28,34 @@ class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
+
+        authViewModel.dataState.observe(this, Observer { dataState ->
+            dataState.data?.let { data ->
+                data.data?.let { dataEvent ->
+                    dataEvent.getContentIfNotHandled()?.let { authViewState ->
+                        authViewState.authToken?.let { authToken ->
+                            authViewModel.setAuthToken(authToken)
+                        }
+                    }
+                }
+
+                data.response?.let { dataEvent ->
+                    dataEvent.getContentIfNotHandled()?.let { response ->
+                        when(response.responseType) {
+                            is Dialog -> {
+                                // inflate dialog
+                            }
+                            is Toast -> {
+                                // inflate toast
+                            }
+                            is None -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+        })
 
         authViewModel.viewState.observe(this, Observer { authViewState ->
             authViewState.authToken?.let { authToken ->
