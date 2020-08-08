@@ -43,4 +43,26 @@ constructor(
         }
     }
 
+    fun attemptRegister(email: String, username: String, password: String, confirm_password: String) : LiveData<DataState<AuthViewState>> {
+        return authService.register(email, username, password, confirm_password).switchMap { apiResponse ->
+            object : LiveData<DataState<AuthViewState>>() {
+                override fun onActive() {
+                    super.onActive()
+                    when(apiResponse) {
+                        is ApiSuccessResponse -> {
+                            value = DataState.data(data = AuthViewState(authToken = AuthToken(apiResponse.body.pk, apiResponse.body.token)), response = null)
+                        }
+                        is ApiErrorResponse -> {
+                            value = DataState.error(response = Response(apiResponse.errorMessage, responseType = ResponseType.Dialog()))
+                        }
+                        is ApiEmptyResponse -> {
+                            value = DataState.error(response =  Response(UNKNOWN_ERROR, responseType = ResponseType.Dialog()))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }
