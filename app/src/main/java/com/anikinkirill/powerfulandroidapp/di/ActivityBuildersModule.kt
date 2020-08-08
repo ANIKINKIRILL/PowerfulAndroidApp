@@ -4,7 +4,9 @@ import com.anikinkirill.powerfulandroidapp.di.auth.AuthFragmentBuildersModule
 import com.anikinkirill.powerfulandroidapp.di.auth.AuthModule
 import com.anikinkirill.powerfulandroidapp.di.auth.AuthScope
 import com.anikinkirill.powerfulandroidapp.di.auth.AuthViewModelModule
+import com.anikinkirill.powerfulandroidapp.di.main.MainScope
 import com.anikinkirill.powerfulandroidapp.ui.auth.AuthActivity
+import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -20,5 +22,9 @@ abstract class ActivityBuildersModule {
         ]
     )
     abstract fun contributeAuthActivity() : AuthActivity
+
+    @MainScope
+    @ContributesAndroidInjector
+    abstract fun contributeMainActivity() : MainActivity
 
 }
