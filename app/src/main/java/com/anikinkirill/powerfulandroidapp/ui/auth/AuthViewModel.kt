@@ -22,10 +22,10 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Ba
     override fun handleStateEvent(event: AuthStateEvent): LiveData<DataState<AuthViewState>> {
         return when(event) {
             is LoginAttemptEvent -> {
-                AbsentLiveData.create()
+                authRepository.attemptLogin(event.email, event.password)
             }
             is RegisterAttemptEvent -> {
-                AbsentLiveData.create()
+                authRepository.attemptRegister(event.email, event.username, event.password, event.confirm_password)
             }
             is CheckPreviousAuthEvent -> {
                 AbsentLiveData.create()
