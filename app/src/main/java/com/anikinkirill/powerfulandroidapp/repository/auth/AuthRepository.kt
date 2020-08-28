@@ -10,7 +10,7 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.*
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthViewState
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse.*
-import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.UNKNOWN_ERROR
+import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
 import javax.inject.Inject
 
 class AuthRepository
@@ -35,7 +35,7 @@ constructor(
                             value = DataState.error(response = Response(apiResponse.errorMessage, responseType = ResponseType.Dialog()))
                         }
                         is ApiEmptyResponse -> {
-                            value = DataState.error(response =  Response(UNKNOWN_ERROR, responseType = ResponseType.Dialog()))
+                            value = DataState.error(response =  Response(ERROR_UNKNOWN, responseType = ResponseType.Dialog()))
                         }
                     }
                 }
@@ -56,7 +56,7 @@ constructor(
                             value = DataState.error(response = Response(apiResponse.errorMessage, responseType = ResponseType.Dialog()))
                         }
                         is ApiEmptyResponse -> {
-                            value = DataState.error(response =  Response(UNKNOWN_ERROR, responseType = ResponseType.Dialog()))
+                            value = DataState.error(response =  Response(ERROR_UNKNOWN, responseType = ResponseType.Dialog()))
                         }
                     }
                 }
