@@ -6,6 +6,8 @@ import androidx.lifecycle.MediatorLiveData
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.Response
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType
+import com.anikinkirill.powerfulandroidapp.util.ApiResponse
+import com.anikinkirill.powerfulandroidapp.util.ApiResponse.*
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_CHECK_NETWORK_CONNECTION
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
@@ -75,5 +77,11 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     }
 
     fun asLiveData() = result as LiveData<DataState<ViewStateType>>
+
+    abstract suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ResponseObject>)
+
+    abstract fun createCall() : LiveData<ApiResponse<ResponseObject>>
+
+    abstract fun setJob(job: Job)
 
 }
