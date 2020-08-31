@@ -1,6 +1,7 @@
 package com.anikinkirill.powerfulandroidapp.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.Response
@@ -72,5 +73,7 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
         coroutineScope = CoroutineScope(IO + job)
         return job
     }
+
+    fun asLiveData() = result as LiveData<DataState<ViewStateType>>
 
 }
