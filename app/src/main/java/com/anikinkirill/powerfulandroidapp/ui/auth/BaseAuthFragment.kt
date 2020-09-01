@@ -10,7 +10,7 @@ import javax.inject.Inject
 abstract class BaseAuthFragment : DaggerFragment() {
 
     companion object {
-        const val TAG = "BaseAuthFragment"
+        const val TAG = "AppDebug_BaseAuthFrag"
     }
 
     @Inject

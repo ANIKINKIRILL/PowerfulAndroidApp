@@ -94,6 +94,7 @@ constructor(
     }
 
     private fun returnErrorResponse(errorMessage: String, responseType: ResponseType) : LiveData<DataState<AuthViewState>> {
+        Log.d(TAG, "returnErrorResponse: $errorMessage")
         return object : LiveData<DataState<AuthViewState>>() {
             override fun onActive() {
                 super.onActive()

@@ -18,7 +18,7 @@ import javax.inject.Singleton
 class SessionManager @Inject constructor(val authTokenDao: AuthTokenDao, val application: Application) {
 
     companion object {
-        private const val TAG = "AppDebug"
+        private const val TAG = "AppDebug_SessionManager"
     }
 
     private val _cachedToken = MutableLiveData<AuthToken>()

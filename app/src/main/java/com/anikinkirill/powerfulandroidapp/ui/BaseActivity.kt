@@ -10,7 +10,7 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
     lateinit var sessionManager: SessionManager
 
     companion object {
-        const val TAG = "AppDebug"
+        const val TAG = "AppDebug_BaseActivity"
     }
 
 }

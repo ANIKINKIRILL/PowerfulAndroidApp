@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType.*
@@ -11,7 +14,7 @@ import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import javax.inject.Inject
 
-class AuthActivity : BaseActivity() {
+class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -23,6 +26,7 @@ class AuthActivity : BaseActivity() {
         setContentView(R.layout.activity_auth)
 
         authViewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
+        findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
 
         subscribeObservers()
     }
@@ -73,6 +77,14 @@ class AuthActivity : BaseActivity() {
     private fun navMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        authViewModel.cancelActiveJobs()
     }
 
 }

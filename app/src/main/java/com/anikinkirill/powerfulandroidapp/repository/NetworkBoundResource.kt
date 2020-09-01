@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -19,12 +20,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
+@SuppressLint("LongLogTag")
 abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     (
     isNetworkAvailable: Boolean // is there a network connection ?
 ) {
 
-    private val TAG: String = "AppDebug"
+    private val TAG: String = "AppDebug_NetworkBoundResource"
 
     protected val result = MediatorLiveData<DataState<ViewStateType>>()
     protected lateinit var job: CompletableJob
