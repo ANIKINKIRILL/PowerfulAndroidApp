@@ -29,7 +29,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener
                     handleErrorState(errorEvent)
                 }
 
-                // DATA
+                // RESPONSE
                 mDataState.data?.let { data ->
                     data.response?.let { responseEvent ->
                         handleResponseState(responseEvent)
