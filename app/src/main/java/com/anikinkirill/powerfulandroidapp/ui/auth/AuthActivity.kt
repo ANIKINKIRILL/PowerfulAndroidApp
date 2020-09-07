@@ -87,4 +87,8 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         authViewModel.cancelActiveJobs()
     }
 
+    override fun displayProgressBar(isLoading: Boolean) {
+        TODO("Not yet implemented")
+    }
+
 }
