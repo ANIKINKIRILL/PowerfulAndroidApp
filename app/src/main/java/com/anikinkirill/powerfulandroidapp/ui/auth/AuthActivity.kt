@@ -10,7 +10,6 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
-import com.anikinkirill.powerfulandroidapp.ui.ResponseType.*
 import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -36,27 +35,14 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
     private fun subscribeObservers() {
 
         authViewModel.dataState.observe(this, Observer { dataState ->
+
+            onDataStateChange(dataState)
+
             dataState.data?.let { data ->
                 data.data?.let { dataEvent ->
                     dataEvent.getContentIfNotHandled()?.let { authViewState ->
                         authViewState.authToken?.let { authToken ->
                             authViewModel.setAuthToken(authToken)
-                        }
-                    }
-                }
-
-                data.response?.let { dataEvent ->
-                    dataEvent.getContentIfNotHandled()?.let { response ->
-                        when(response.responseType) {
-                            is Dialog -> {
-                                // inflate dialog
-                            }
-                            is Toast -> {
-                                // inflate toast
-                            }
-                            is None -> {
-
-                            }
                         }
                     }
                 }
