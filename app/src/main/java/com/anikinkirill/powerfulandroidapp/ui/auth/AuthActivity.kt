@@ -2,6 +2,7 @@ package com.anikinkirill.powerfulandroidapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -12,6 +13,7 @@ import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType.*
 import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
+import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
 class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener {
@@ -88,7 +90,7 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
     }
 
     override fun displayProgressBar(isLoading: Boolean) {
-        TODO("Not yet implemented")
+        progress_bar.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
     }
 
 }
