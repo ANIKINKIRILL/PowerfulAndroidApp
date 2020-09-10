@@ -10,6 +10,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
+import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -30,6 +31,7 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
 
         subscribeObservers()
+        checkPreviousAuthUser()
     }
 
     private fun subscribeObservers() {
@@ -60,6 +62,10 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
                 navMainActivity()
             }
         })
+    }
+
+    private fun checkPreviousAuthUser() {
+        authViewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
     }
 
     private fun navMainActivity() {
