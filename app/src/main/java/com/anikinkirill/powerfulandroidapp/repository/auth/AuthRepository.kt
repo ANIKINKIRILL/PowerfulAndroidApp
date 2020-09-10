@@ -49,7 +49,7 @@ constructor(
             return returnErrorResponse(loginFieldErrors, ResponseType.Dialog())
         }
 
-        return object : NetworkBoundResource<LoginResponse, AuthViewState>(sessionManager.isConnectedToTheInternet()) {
+        return object : NetworkBoundResource<LoginResponse, AuthViewState>(sessionManager.isConnectedToTheInternet(), true) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<LoginResponse>) {
                 Log.d(TAG, "handleApiSuccessResponse: $response")
                 // Incorrect credentials counts as a 200 response from the server, so need to handle that
@@ -81,6 +81,12 @@ constructor(
                 repositoryJob?.cancel()
                 repositoryJob = job
             }
+
+            // not used in this case
+            override suspend fun createCacheRequestAndReturn() {
+                TODO("Not yet implemented")
+            }
+
         }.asLiveData()
     }
 
@@ -90,7 +96,7 @@ constructor(
             return returnErrorResponse(registerFieldErrors, ResponseType.Dialog())
         }
 
-        return object : NetworkBoundResource<RegistrationResponse, AuthViewState>(sessionManager.isConnectedToTheInternet()) {
+        return object : NetworkBoundResource<RegistrationResponse, AuthViewState>(sessionManager.isConnectedToTheInternet(), true) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<RegistrationResponse>) {
                 Log.d(TAG, "handleApiSuccessResponse: $response")
                 // Incorrect credentials counts as a 200 response from the server, so need to handle that
@@ -122,6 +128,12 @@ constructor(
                 repositoryJob?.cancel()
                 repositoryJob = job
             }
+
+            // not used in this case
+            override suspend fun createCacheRequestAndReturn() {
+                TODO("Not yet implemented")
+            }
+
         }.asLiveData()
     }
 
