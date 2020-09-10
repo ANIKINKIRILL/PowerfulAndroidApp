@@ -15,14 +15,17 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.Response
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType
+import com.anikinkirill.powerfulandroidapp.ui.auth.AuthViewModel
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthViewState
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.LoginFields
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.RegistrationFields
+import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse.ApiSuccessResponse
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_SAVE_AUTH_TOKEN
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
 import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys
+import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -135,6 +138,60 @@ constructor(
             }
 
         }.asLiveData()
+    }
+
+    fun checkPreviousAuthUser() : LiveData<DataState<AuthViewState>> {
+        val previousAuthUserEmail : String? = sharedPreferences.getString(PreferenceKeys.PREVIOUS_AUTH_USER, null)
+        if(previousAuthUserEmail.isNullOrBlank()) {
+            Log.d(TAG, "checkPreviousAuthUser: No previous user was found")
+            return returnNoTokenFound()
+        }
+
+        return object : NetworkBoundResource<Void, AuthViewState>(sessionManager.isConnectedToTheInternet(), false) {
+
+            override suspend fun createCacheRequestAndReturn() {
+                accountPropertiesDao.searchByEmail(previousAuthUserEmail).let { accountProperties ->
+                    Log.d(TAG, "checkPreviousAuthUser: searching the Token $accountProperties")
+                    accountProperties?.let { mAccountProperties ->
+                        if(mAccountProperties.pk > -1) {
+                            authTokenDao.searchByPk(mAccountProperties.pk).let { authToken ->
+                                if(authToken != null) {
+                                    onCompleteJob(DataState.data(AuthViewState(authToken = authToken)))
+                                    return
+                                }
+                            }
+                        }
+                    }
+                    Log.d(TAG, "checkPreviousAuthUser: AccountProperties is null. AuthToken not found")
+                    onCompleteJob(DataState.data(null, Response(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE, ResponseType.None())))
+                }
+            }
+
+            // not used in this case
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Void>) {
+
+            }
+
+            // not used in this case
+            override fun createCall(): LiveData<ApiResponse<Void>> {
+                return AbsentLiveData.create()
+            }
+
+            override fun setJob(job: Job) {
+                repositoryJob?.cancel()
+                repositoryJob = job
+            }
+
+        }.asLiveData()
+    }
+
+    private fun returnNoTokenFound() : LiveData<DataState<AuthViewState>> {
+        return object : LiveData<DataState<AuthViewState>>() {
+            override fun onActive() {
+                super.onActive()
+                value = DataState.data(null, Response(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE, ResponseType.None()))
+            }
+        }
     }
 
     private fun saveEmailToSharedPreferences(email: String) {
