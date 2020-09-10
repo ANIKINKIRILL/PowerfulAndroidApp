@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.anikinkirill.powerfulandroidapp.api.auth.LoginResponse
 import com.anikinkirill.powerfulandroidapp.api.auth.OpenApiAuthService
 import com.anikinkirill.powerfulandroidapp.api.auth.RegistrationResponse
+import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
 import com.anikinkirill.powerfulandroidapp.persitence.AuthTokenDao
@@ -19,6 +20,7 @@ import com.anikinkirill.powerfulandroidapp.ui.auth.state.LoginFields
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.RegistrationFields
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse.ApiSuccessResponse
+import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_SAVE_AUTH_TOKEN
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -53,6 +55,19 @@ constructor(
                 if(response.body.response == GENERIC_AUTH_ERROR) {
                     return onErrorReturn(response.body.error_message, shouldUseDialog = true, shouldUseToast = false)
                 }
+
+                // don't care about result. Just insert if it does't exist b/c foreign key relationship
+                // with AuthToken table
+                accountPropertiesDao.insertOrIgnore(AccountProperties(pk = response.body.pk, email = response.body.email, username = ""))
+
+                // will return -1 if failure
+                val result = authTokenDao.insert(AuthToken(response.body.pk, response.body.token))
+
+                if(result < 0) {
+                    return onCompleteJob(DataState.error(response = Response(ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog())))
+                }
+
+                // TODO("saveEmailToSharedPreferences(email)")
 
                 onCompleteJob(DataState.data(AuthViewState(authToken = AuthToken(response.body.pk, response.body.token))))
             }
