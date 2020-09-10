@@ -28,7 +28,7 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Ba
                 authRepository.attemptRegister(event.email, event.username, event.password, event.confirm_password)
             }
             is CheckPreviousAuthEvent -> {
-                AbsentLiveData.create()
+                authRepository.checkPreviousAuthUser()
             }
         }
     }
