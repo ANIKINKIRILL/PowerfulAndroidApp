@@ -97,6 +97,19 @@ constructor(
                     return onErrorReturn(response.body.errorMessage, shouldUseDialog = true, shouldUseToast = false)
                 }
 
+                // don't care about result. Just insert if it does't exist b/c foreign key relationship
+                // with AuthToken table
+                accountPropertiesDao.insertOrIgnore(AccountProperties(pk = response.body.pk, email = response.body.email, username = ""))
+
+                // will return -1 if failure
+                val result = authTokenDao.insert(AuthToken(response.body.pk, response.body.token))
+
+                if(result < 0) {
+                    return onCompleteJob(DataState.error(response = Response(ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog())))
+                }
+
+                // TODO("saveEmailToSharedPreferences(email)")
+
                 onCompleteJob(DataState.data(AuthViewState(authToken = AuthToken(response.body.pk, response.body.token))))
             }
 
