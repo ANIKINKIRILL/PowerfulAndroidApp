@@ -22,6 +22,7 @@ import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse.ApiSuccessResponse
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_SAVE_AUTH_TOKEN
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
+import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ constructor(
                     return onCompleteJob(DataState.error(response = Response(ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog())))
                 }
 
-                // TODO("saveEmailToSharedPreferences(email)")
+                saveEmailToSharedPreferences(email)
 
                 onCompleteJob(DataState.data(AuthViewState(authToken = AuthToken(response.body.pk, response.body.token))))
             }
@@ -108,7 +109,7 @@ constructor(
                     return onCompleteJob(DataState.error(response = Response(ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog())))
                 }
 
-                // TODO("saveEmailToSharedPreferences(email)")
+                saveEmailToSharedPreferences(email)
 
                 onCompleteJob(DataState.data(AuthViewState(authToken = AuthToken(response.body.pk, response.body.token))))
             }
@@ -122,6 +123,10 @@ constructor(
                 repositoryJob = job
             }
         }.asLiveData()
+    }
+
+    private fun saveEmailToSharedPreferences(email: String) {
+        editor.putString(PreferenceKeys.PREVIOUS_AUTH_USER, email).apply()
     }
 
     private fun returnErrorResponse(errorMessage: String, responseType: ResponseType) : LiveData<DataState<AuthViewState>> {
