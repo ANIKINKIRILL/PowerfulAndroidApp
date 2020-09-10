@@ -1,6 +1,8 @@
 package com.anikinkirill.powerfulandroidapp.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
@@ -9,6 +11,7 @@ import com.anikinkirill.powerfulandroidapp.persitence.AppDatabase.Companion.DATA
 import com.anikinkirill.powerfulandroidapp.persitence.AuthTokenDao
 import com.anikinkirill.powerfulandroidapp.util.Constants
 import com.anikinkirill.powerfulandroidapp.util.LiveDataCallAdapterFactory
+import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -67,6 +70,18 @@ class AppModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application) : SharedPreferences {
+        return application.getSharedPreferences(PreferenceKeys.APP_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferencesEditor(sharedPreferences: SharedPreferences) : SharedPreferences.Editor {
+        return sharedPreferences.edit()
     }
 
 }
