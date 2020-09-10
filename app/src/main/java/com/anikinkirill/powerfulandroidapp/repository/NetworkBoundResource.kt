@@ -23,7 +23,8 @@ import kotlinx.coroutines.Dispatchers.Main
 @SuppressLint("LongLogTag")
 abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     (
-    isNetworkAvailable: Boolean // is there a network connection ?
+    isNetworkAvailable: Boolean, // is there a network connection ?
+    isNetworkRequest: Boolean // is this a network request ?
 ) {
 
     private val TAG: String = "AppDebug_NetworkBoundResource"
