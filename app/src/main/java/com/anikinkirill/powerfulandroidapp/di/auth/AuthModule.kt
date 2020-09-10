@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.di.auth
 
+import android.content.SharedPreferences
 import com.anikinkirill.powerfulandroidapp.api.auth.OpenApiAuthService
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
 import com.anikinkirill.powerfulandroidapp.persitence.AuthTokenDao
@@ -24,9 +25,11 @@ class AuthModule {
         openApiAuthService: OpenApiAuthService,
         accountPropertiesDao: AccountPropertiesDao,
         authTokenDao: AuthTokenDao,
-        sessionManager: SessionManager
+        sessionManager: SessionManager,
+        sharedPreferences: SharedPreferences,
+        editor: SharedPreferences.Editor
     ) : AuthRepository {
-        return AuthRepository(authTokenDao, accountPropertiesDao, openApiAuthService, sessionManager)
+        return AuthRepository(authTokenDao, accountPropertiesDao, openApiAuthService, sessionManager, sharedPreferences, editor)
     }
 
 }

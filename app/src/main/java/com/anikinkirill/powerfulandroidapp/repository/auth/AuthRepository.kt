@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.repository.auth
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.anikinkirill.powerfulandroidapp.api.auth.LoginResponse
@@ -28,7 +29,9 @@ constructor(
     val authTokenDao: AuthTokenDao,
     val accountPropertiesDao: AccountPropertiesDao,
     val authService: OpenApiAuthService,
-    val sessionManager: SessionManager
+    val sessionManager: SessionManager,
+    val sharedPreferences: SharedPreferences,
+    val editor: SharedPreferences.Editor
 ) {
 
     companion object {
