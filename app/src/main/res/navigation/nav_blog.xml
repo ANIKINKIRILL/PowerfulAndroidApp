@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_blog"
+    app:startDestination="@id/blogFragment">
+
+    <fragment
+        android:id="@+id/blogFragment"
+        android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogFragment"
+        android:label="BlogFragment" >
+        <action
+            android:id="@+id/action_blogFragment_to_viewBlogFragment"
+            app:destination="@id/viewBlogFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewBlogFragment"
+        android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.ViewBlogFragment"
+        android:label="ViewBlogFragment" >
+        <action
+            android:id="@+id/action_viewBlogFragment_to_updateBlogFragment"
+            app:destination="@id/updateBlogFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/action_viewBlogFragment_to_blogFragment"
+            app:destination="@id/blogFragment"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popUpTo="@id/nav_blog"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/updateBlogFragment"
+        android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.UpdateBlogFragment"
+        android:label="UpdateBlogFragment" >
+        <action
+            android:id="@+id/action_updateBlogFragment_to_blogFragment"
+            app:destination="@id/blogFragment"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popUpTo="@id/nav_blog"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+</navigation>
