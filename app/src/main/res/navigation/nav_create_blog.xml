@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_create_blog"
+    app:startDestination="@id/createBlogFragment">
+
+    <fragment
+        android:id="@+id/createBlogFragment"
+        android:name="com.anikinkirill.powerfulandroidapp.ui.main.create_blog.CreateBlogFragment"
+        android:label="CreateBlogFragment" />
+
+</navigation>
