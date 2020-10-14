@@ -15,7 +15,6 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.Response
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType
-import com.anikinkirill.powerfulandroidapp.ui.auth.AuthViewModel
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthViewState
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.LoginFields
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.RegistrationFields
