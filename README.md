@@ -8,6 +8,7 @@ MVI (Model-View-Intent) architecture is the kind of MVVM (Model-View-ViewModel),
 in one activity, your ViewModel is getting massive and uncomprehendable. So MVI is ready to help! [HERE IS THE GUIDE](https://www.raywenderlich.com/817602-mvi-architecture-for-android-tutorial-getting-started)
 
 ![alt text](https://miro.medium.com/max/1538/1*w0QeeQqrnISXLhYkYZWoAg.png "MVVM Architecture")
+![alt text](https://github.com/ANIKINKIRILL/PowerfulAndroidApp/blob/master/MVI_architecture.jpg "MVVM Architecture")
 
 ## User Authentication Token
 User cannot see and create any blog unless he has been logged in successfully and he has the memeber subscription. Each member subscription has his own TOKEN. After he logged in 
