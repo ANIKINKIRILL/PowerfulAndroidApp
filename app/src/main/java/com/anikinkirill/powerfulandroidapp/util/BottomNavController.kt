@@ -30,6 +30,14 @@ class BottomNavController(private val onNavigationGraphChanged: OnNavigationGrap
         fun onItemChange(itemId: Int)
     }
 
+    private fun setOnItemNavigationChanged(listener: (itemId: Int) -> Unit) {
+        navItemChangeListener = object : OnNavigationItemChanged {
+            override fun onItemChange(itemId: Int) {
+                listener.invoke(itemId)
+            }
+        }
+    }
+
     /**
      * Get navigation graph id
      * @NavigationRes means that returned type of
