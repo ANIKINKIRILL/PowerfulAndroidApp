@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.annotation.IdRes
 import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 
@@ -24,6 +25,14 @@ class BottomNavController(
     lateinit var fragmentManager: FragmentManager
     lateinit var navItemChangeListener: OnNavigationItemChanged
     private val navigationBackStack = BackStack.of(appStartDestinationId)
+
+
+    init {
+        if(context is Activity) {
+            activity = context
+            fragmentManager = (activity as FragmentActivity).supportFragmentManager
+        }
+    }
 
     /**
      *  For highlighting the selected item
