@@ -1,12 +1,20 @@
 package com.anikinkirill.powerfulandroidapp.util
 
 import android.app.Activity
+import android.content.Context
+import androidx.annotation.IdRes
 import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 
-class BottomNavController(private val onNavigationGraphChanged: OnNavigationGraphChanged, private val navGraphProvider: NavGraphProvider) {
+class BottomNavController(
+    private val context: Context,
+    @IdRes private val containerId: Int,            // R.id.main_nav_host_fragment
+    @IdRes private val appStartDestinationId: Int,
+    private val onNavigationGraphChanged: OnNavigationGraphChanged,
+    private val navGraphProvider: NavGraphProvider
+) {
 
     companion object {
         private const val TAG = "AppDebug_BottomNavController"
