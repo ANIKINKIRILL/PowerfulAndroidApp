@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import com.anikinkirill.powerfulandroidapp.R
 
 class BottomNavController(
     private val context: Context,
     @IdRes private val containerId: Int,            // R.id.main_nav_host_fragment
     @IdRes private val appStartDestinationId: Int,
-    private val onNavigationGraphChanged: OnNavigationGraphChanged,
+    private val graphChangeListener: OnNavigationGraphChanged?,
     private val navGraphProvider: NavGraphProvider
 ) {
 
@@ -32,6 +34,34 @@ class BottomNavController(
             activity = context
             fragmentManager = (activity as FragmentActivity).supportFragmentManager
         }
+    }
+
+    fun onNavigationItemSelected(itemId: Int = navigationBackStack.last()) : Boolean {
+        // Find a fragment or create a new one
+        val fragment = fragmentManager.findFragmentByTag(itemId.toString()) ?: NavHostFragment.create(navGraphProvider.getNavGraphId(itemId))
+
+        // Replace the fragment representing a navigation item
+        fragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            .replace(containerId, fragment, itemId.toString())
+            .addToBackStack(null)
+            .commit()
+
+        // Add to back stack
+        navigationBackStack.moveLast(itemId)
+
+        // Update checked icon
+        navItemChangeListener.onItemChange(itemId)
+
+        // Communicate with Activity
+        graphChangeListener?.onGraphChange()
+
+        return true
     }
 
     /**
