@@ -82,4 +82,21 @@ class BottomNavController(private val onNavigationGraphChanged: OnNavigationGrap
         fun onReselectNavItem(navController: NavController, fragment: Fragment)
     }
 
+    private class BackStack : ArrayList<Int>() {
+
+        companion object {
+            fun of(vararg elements: Int) : BackStack {
+                val backStack = BackStack()
+                backStack.addAll(elements.toTypedArray())
+                return backStack
+            }
+        }
+
+        fun removeLast() = removeAt(size - 1)
+        fun moveLast(item: Int) {
+            remove(item)
+            add(item)
+        }
+    }
+
 }
