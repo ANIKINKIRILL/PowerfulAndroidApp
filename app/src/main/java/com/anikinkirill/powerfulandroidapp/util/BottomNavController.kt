@@ -1,6 +1,8 @@
 package com.anikinkirill.powerfulandroidapp.util
 
 import androidx.annotation.NavigationRes
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 
 class BottomNavController() {
 
@@ -49,6 +51,17 @@ class BottomNavController() {
 
     interface OnNavigationGraphChanged {
         fun onGraphChange()
+    }
+
+    /**
+     * Double click on already selected item
+     * will pop all the stack to the root, refreshing it
+     * Example: Home -> BlogFragment -> ViewBlogFragment -> UpdateBlogFragment
+     * double click on HOME will reselect everything and go to HOME root fragment
+     */
+
+    interface OnNavigationReselectedListener {
+        fun onReselectNavItem(navController: NavController, fragment: Fragment)
     }
 
 }
