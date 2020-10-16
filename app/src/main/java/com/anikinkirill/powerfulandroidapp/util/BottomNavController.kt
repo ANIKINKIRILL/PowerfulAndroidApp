@@ -34,4 +34,21 @@ class BottomNavController() {
         fun getNavGraphId(itemId: Int) : Int
     }
 
+    /**
+     *  Tell the Activity that graph is changed now
+     *  So when user goes from HOME to ACCOUNT
+     *  this interface in going to be triggered
+     *
+     *  DO NOT MISUNDERSTAND with [OnNavigationItemChanged] interface,
+     *  because [OnNavigationItemChanged] is used INTERNALLY
+     *  only in [BottomNavController] class
+     *
+     *  But [OnNavigationGraphChanged] is used for telling the
+     *  activity that graph is different
+     */
+
+    interface OnNavigationGraphChanged {
+        fun onGraphChange()
+    }
+
 }
