@@ -1,10 +1,20 @@
 package com.anikinkirill.powerfulandroidapp.util
 
+import android.app.Activity
 import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 
-class BottomNavController() {
+class BottomNavController(private val onNavigationGraphChanged: OnNavigationGraphChanged, private val navGraphProvider: NavGraphProvider) {
+
+    companion object {
+        private const val TAG = "AppDebug_BottomNavController"
+    }
+
+    lateinit var activity: Activity
+    lateinit var fragmentManager: FragmentManager
+    lateinit var navItemChangeListener: OnNavigationItemChanged
 
     /**
      *  For highlighting the selected item
