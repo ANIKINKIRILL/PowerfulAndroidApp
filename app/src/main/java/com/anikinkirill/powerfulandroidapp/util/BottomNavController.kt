@@ -23,6 +23,7 @@ class BottomNavController(
     lateinit var activity: Activity
     lateinit var fragmentManager: FragmentManager
     lateinit var navItemChangeListener: OnNavigationItemChanged
+    private val navigationBackStack = BackStack.of(appStartDestinationId)
 
     /**
      *  For highlighting the selected item
