@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.anikinkirill.powerfulandroidapp.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class BottomNavController(
     private val context: Context,
-    @IdRes private val containerId: Int,            // R.id.main_nav_host_fragment
+    @IdRes val containerId: Int,            // R.id.main_nav_host_fragment
     @IdRes private val appStartDestinationId: Int,
     private val graphChangeListener: OnNavigationGraphChanged?,
     private val navGraphProvider: NavGraphProvider
@@ -78,7 +80,7 @@ class BottomNavController(
         fun onItemChange(itemId: Int)
     }
 
-    private fun setOnItemNavigationChanged(listener: (itemId: Int) -> Unit) {
+    fun setOnItemNavigationChanged(listener: (itemId: Int) -> Unit) {
         navItemChangeListener = object : OnNavigationItemChanged {
             override fun onItemChange(itemId: Int) {
                 listener.invoke(itemId)
@@ -145,6 +147,40 @@ class BottomNavController(
             remove(item)
             add(item)
         }
+    }
+
+}
+
+fun BottomNavigationView.setUpNavigation(
+    bottomNavController: BottomNavController,
+    onReselectListener: BottomNavController.OnNavigationReselectedListener
+) {
+
+    // Get this function from BottomNavigationView
+    // Set a listener that will be notified when a bottom navigation item is selected
+    setOnNavigationItemSelectedListener {
+        bottomNavController.onNavigationItemSelected(it.itemId)
+    }
+
+    // Get this function from BottomNavigationView
+    // Set a listener that will be notified when the currently selected bottom navigation item is reselected
+    // When item graph (HOME, CREATE, ACCOUNT) is already selected, but user select this item one more time
+    // Every child/detail fragments should be gone. So user see the very first fragment
+    setOnNavigationItemReselectedListener {
+        bottomNavController
+            .fragmentManager
+            .findFragmentById(bottomNavController.containerId)!!
+            .childFragmentManager
+            .fragments[0]?.let { fragment ->
+            onReselectListener.onReselectNavItem(
+                bottomNavController.activity.findNavController(bottomNavController.containerId),
+                fragment
+            )
+        }
+    }
+
+    bottomNavController.setOnItemNavigationChanged { itemId ->
+        menu.findItem(itemId).isChecked = true
     }
 
 }
