@@ -1,9 +1,8 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 
 class ViewBlogFragment : BaseBlogFragment() {
@@ -18,6 +17,34 @@ class ViewBlogFragment : BaseBlogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        // TODO("Check if current user if the author of the blog")
+        val isAuthorOfBlogPost = true
+        if(isAuthorOfBlogPost) {
+            inflater.inflate(R.menu.edit_view_menu, menu)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // TODO("Check if current user if the author of the blog")
+        val isAuthorOfBlogPost = true
+        if(isAuthorOfBlogPost) {
+            when(item.itemId) {
+                R.id.edit -> {
+                    navigateToUpdateBlogFragment()
+                    return true
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateToUpdateBlogFragment() {
+        findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
     }
 
 }
