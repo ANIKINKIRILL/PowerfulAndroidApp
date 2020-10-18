@@ -67,9 +67,9 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
 
     override fun getNavGraphId(itemId: Int): Int {
         return when(itemId) {
-            R.id.nav_blog -> R.navigation.nav_blog
-            R.id.nav_create_blog -> R.navigation.nav_create_blog
-            R.id.nav_account -> R.navigation.nav_account
+            R.id.menu_nav_blog -> R.navigation.nav_blog
+            R.id.menu_nav_create_blog -> R.navigation.nav_create_blog
+            R.id.menu_nav_account -> R.navigation.nav_account
             else -> R.navigation.nav_blog
         }
     }
