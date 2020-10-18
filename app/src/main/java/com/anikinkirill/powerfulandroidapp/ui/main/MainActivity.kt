@@ -40,10 +40,6 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
             bottomNavController.onNavigationItemSelected()
         }
 
-        tool_bar.setOnClickListener {
-            sessionManager.logout()
-        }
-
         subscribeObservers()
     }
 
