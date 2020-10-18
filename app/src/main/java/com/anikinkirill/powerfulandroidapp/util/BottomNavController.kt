@@ -149,6 +149,36 @@ class BottomNavController(
         }
     }
 
+    fun onBackPressed() {
+        val childFragmentManager = fragmentManager.findFragmentById(containerId)!!.childFragmentManager
+        when {
+            childFragmentManager.popBackStackImmediate() -> {
+
+            }
+
+            // Fragment back stack is empty so try to go back on the navigation stack
+            navigationBackStack.size > 1 -> {
+                // Remove last element from navigation back stack
+                navigationBackStack.removeLast()
+
+                // Update the container with a new fragment
+                onNavigationItemSelected()
+            }
+
+            // If the stack has only one and it's not the navigation home we should
+            // ensure that the application always leave from startDestination
+            navigationBackStack.last() != appStartDestinationId -> {
+                navigationBackStack.removeLast()
+                navigationBackStack.add(0, appStartDestinationId)
+                onNavigationItemSelected()
+            }
+
+            // Navigation stack is empty, so finish the activity
+            else -> activity.finish()
+
+        }
+    }
+
 }
 
 fun BottomNavigationView.setUpNavigation(
