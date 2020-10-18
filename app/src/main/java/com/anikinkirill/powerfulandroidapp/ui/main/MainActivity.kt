@@ -25,7 +25,7 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private val bottomNavController: BottomNavController by lazy(LazyThreadSafetyMode.NONE) {
-        BottomNavController(this, R.id.main_nav_host_fragment, R.id.nav_blog, this, this)
+        BottomNavController(this, R.id.main_nav_host_fragment, R.id.menu_nav_blog, this, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
