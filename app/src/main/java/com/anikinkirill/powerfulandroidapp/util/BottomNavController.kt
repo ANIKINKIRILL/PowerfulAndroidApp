@@ -13,6 +13,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.anikinkirill.powerfulandroidapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+/**
+ * Custom bottom navigation controller
+ *
+ * Helps to easily manage the back stack of fragments
+ * The core concept took from here:
+ * https://stackoverflow.com/questions/50577356/android-jetpack-navigation-bottomnavigationview-with-youtube-or-instagram-like#_=_
+ */
+
 class BottomNavController(
     private val context: Context,
     @IdRes val containerId: Int,            // R.id.main_nav_host_fragment
