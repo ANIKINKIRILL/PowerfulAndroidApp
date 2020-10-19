@@ -6,6 +6,6 @@
     <fragment
         android:id="@+id/createBlogFragment"
         android:name="com.anikinkirill.powerfulandroidapp.ui.main.create_blog.CreateBlogFragment"
-        android:label="CreateBlogFragment" />
+        android:label="Create Blog" />
 
 </navigation>

@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/blogFragment"
         android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogFragment"
-        android:label="BlogFragment" >
+        android:label="Blog" >
         <action
             android:id="@+id/action_blogFragment_to_viewBlogFragment"
             app:destination="@id/viewBlogFragment"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/viewBlogFragment"
         android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.ViewBlogFragment"
-        android:label="ViewBlogFragment" >
+        android:label="View" >
         <action
             android:id="@+id/action_viewBlogFragment_to_updateBlogFragment"
             app:destination="@id/updateBlogFragment"
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/updateBlogFragment"
         android:name="com.anikinkirill.powerfulandroidapp.ui.main.blog.UpdateBlogFragment"
-        android:label="UpdateBlogFragment" >
+        android:label="Update" >
         <action
             android:id="@+id/action_updateBlogFragment_to_blogFragment"
             app:destination="@id/blogFragment"
