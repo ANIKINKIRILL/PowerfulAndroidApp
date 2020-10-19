@@ -13,6 +13,7 @@ import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
 import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.MainActivity
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
@@ -83,6 +84,10 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
 
     override fun displayProgressBar(isLoading: Boolean) {
         progress_bar.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
+    }
+
+    override fun expandAppBar() {
+        // not using in this activity
     }
 
 }

@@ -18,6 +18,7 @@ import com.anikinkirill.powerfulandroidapp.ui.main.blog.ViewBlogFragment
 import com.anikinkirill.powerfulandroidapp.util.BottomNavController
 import com.anikinkirill.powerfulandroidapp.util.BottomNavController.*
 import com.anikinkirill.powerfulandroidapp.util.setUpNavigation
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -71,7 +72,7 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
     }
 
     override fun onGraphChange() {
-        // TODO("Not yet implemented")
+        expandAppBar()
     }
 
     override fun onReselectNavItem(navController: NavController, fragment: Fragment) {
@@ -105,6 +106,10 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
             android.R.id.home -> onBackPressed()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun expandAppBar() {
+        findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
     }
 
 }
