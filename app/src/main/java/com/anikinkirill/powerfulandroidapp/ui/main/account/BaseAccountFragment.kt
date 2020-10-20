@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
+import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 @SuppressLint("LongLogTag")
 abstract class BaseAccountFragment : DaggerFragment() {
@@ -20,11 +23,21 @@ abstract class BaseAccountFragment : DaggerFragment() {
         const val TAG = "AppDebug_BaseAccountFragment"
     }
 
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
+    lateinit var viewModel: AccountViewModel
+
     lateinit var onDataStateChangeListener: DataStateChangeListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.accountFragment, activity as AppCompatActivity)
+
+        viewModel = activity?.let {
+            ViewModelProvider(this, providerFactory).get(AccountViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
+
     }
 
     private fun setupActionBarWithNavController(fragmentId: Int, activity: AppCompatActivity) {
