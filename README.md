@@ -10,6 +10,13 @@ in one activity, your ViewModel is getting massive and uncomprehendable. So MVI 
 ![alt text](https://miro.medium.com/max/1538/1*w0QeeQqrnISXLhYkYZWoAg.png "MVVM Architecture")
 ![alt text](https://github.com/ANIKINKIRILL/PowerfulAndroidApp/blob/master/MVI_architecture.jpg "MVVM Architecture")
 
+## JetPack Navigation Components and BottomNavController
+Custom bottom navigation controller. Helps to easily manage the back stack of fragments
+The core concept took from [here](https://stackoverflow.com/questions/50577356/android-jetpack-navigation-bottomnavigationview-with-youtube-or-instagram-like#_=_)
+
+![alt text](https://github.com/ANIKINKIRILL/PowerfulAndroidApp/blob/master/bottom_nav_controller.jpg "BottomNavController")
+
+
 ## User Authentication Token
 User cannot see and create any blog unless he has been logged in successfully and he has the memeber subscription. Each member subscription has his own TOKEN. After he logged in 
 app checks this TOKEN and respond ERROR or SUCCESS. In this application I use the same logic as the most common apps do. If the user closes the appication, and opens it tomorrow, app will authenticate user automatically using saved AUTH TOKEN in SessionManager class. After user logged out, the AUTH TOKEN will be deleted from SessionManager class
