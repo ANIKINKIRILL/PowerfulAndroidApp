@@ -10,6 +10,12 @@ in one activity, your ViewModel is getting massive and uncomprehendable. So MVI 
 ![alt text](https://miro.medium.com/max/1538/1*w0QeeQqrnISXLhYkYZWoAg.png "MVVM Architecture")
 ![alt text](https://github.com/ANIKINKIRILL/PowerfulAndroidApp/blob/master/MVI_architecture.jpg "MVVM Architecture")
 
+## How to start/plan MVI Architecture
+Many of us know MVI Architecture pretty well. But sometimes it is very hard to plan your classes and what packages are gonna be used.
+So this picture shows you the step by step plan how to start and implement MVI Architecture
+
+![alt text](https://github.com/ANIKINKIRILL/PowerfulAndroidApp/blob/master/plan_mvi_architecture.jpg "Plan MVI Architecture")
+
 ## JetPack Navigation Components and BottomNavController
 Custom bottom navigation controller. Helps to easily manage the back stack of fragments
 The core concept took from [here](https://stackoverflow.com/questions/50577356/android-jetpack-navigation-bottomnavigationview-with-youtube-or-instagram-like#_=_)
