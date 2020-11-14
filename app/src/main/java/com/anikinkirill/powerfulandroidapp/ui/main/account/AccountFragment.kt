@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
+import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent.GetAccountPropertiesEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : BaseAccountFragment() {
@@ -27,6 +28,11 @@ class AccountFragment : BaseAccountFragment() {
             viewModel.logout()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setStateEvent(GetAccountPropertiesEvent())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
