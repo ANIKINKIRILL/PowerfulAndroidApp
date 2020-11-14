@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
+import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent.GetAccountPropertiesEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 
@@ -33,6 +34,11 @@ class AccountFragment : BaseAccountFragment() {
     override fun onResume() {
         super.onResume()
         viewModel.setStateEvent(GetAccountPropertiesEvent())
+    }
+
+    private fun setAccountPropertiesToUi(accountProperties: AccountProperties) {
+        email.text = accountProperties.email
+        username.text = accountProperties.username
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
