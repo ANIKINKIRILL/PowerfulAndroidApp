@@ -25,7 +25,9 @@ class AccountViewModel
     override fun handleStateEvent(event: AccountStateEvent): LiveData<DataState<AccountViewState>> {
         when(event) {
             is GetAccountPropertiesEvent -> {
-                return AbsentLiveData.create()
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    accountRepository.getAccountProperties(authToken)
+                } ?: AbsentLiveData.create()
             }
             is ChangePasswordEvent -> {
                 return AbsentLiveData.create()
