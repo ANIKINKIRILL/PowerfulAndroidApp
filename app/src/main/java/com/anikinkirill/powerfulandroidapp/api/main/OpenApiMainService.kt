@@ -8,7 +8,7 @@ import retrofit2.http.Header
 
 interface OpenApiMainService {
 
-    @GET("account/properties")
+    @GET("api/account/properties")
     fun getAccountProperties(
         @Header("Authorization") authorization: String
     ): LiveData<ApiResponse<AccountProperties>>

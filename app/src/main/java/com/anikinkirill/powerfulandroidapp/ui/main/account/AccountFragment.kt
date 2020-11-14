@@ -1,14 +1,22 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.account
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent.GetAccountPropertiesEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 
+@SuppressLint("LongLogTag")
 class AccountFragment : BaseAccountFragment() {
+
+    companion object {
+        const val TAG = "AppDebug_AccountFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +36,34 @@ class AccountFragment : BaseAccountFragment() {
         logout_button.setOnClickListener {
             viewModel.logout()
         }
+
+        subscribeObservers()
+
+    }
+
+    private fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            onDataStateChangeListener.onDataStateChange(dataState)
+            dataState.data?.let { data ->
+                data.data?.let { event ->
+                    event.getContentIfNotHandled()?.let { viewState ->
+                        viewState.accountProperties?.let { accountProperties ->
+                            Log.d(TAG, "AccountFragment, DataState: $accountProperties")
+                            viewModel.setAccountProperties(accountProperties)
+                        }
+                    }
+                }
+            }
+        })
+
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewState?.let {
+                it.accountProperties?.let { accountProperties ->
+                    Log.d(TAG, "AccountFragment, ViewState: $accountProperties")
+                    setAccountPropertiesToUi(accountProperties)
+                }
+            }
+        })
 
     }
 
