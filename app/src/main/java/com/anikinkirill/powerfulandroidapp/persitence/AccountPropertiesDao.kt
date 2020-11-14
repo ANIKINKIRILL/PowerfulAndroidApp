@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.persitence
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
@@ -17,7 +18,7 @@ interface AccountPropertiesDao {
     fun insertOrIgnore(accountProperties: AccountProperties) : Long
 
     @Query("SELECT * FROM account_properties WHERE pk = :pk")
-    fun searchByPk(pk: Int) : AccountProperties?
+    fun searchByPk(pk: Int) : LiveData<AccountProperties?>
 
     @Query("SELECT * FROM account_properties WHERE email = :email")
     suspend fun searchByEmail(email: String) : AccountProperties?

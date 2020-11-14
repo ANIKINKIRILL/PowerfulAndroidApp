@@ -22,10 +22,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
 @SuppressLint("LongLogTag")
-abstract class NetworkBoundResource<ResponseObject, ViewStateType>
+abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>
     (
     isNetworkAvailable: Boolean, // is there a network connection ?
-    isNetworkRequest: Boolean // is this a network request ?
+    isNetworkRequest: Boolean, // is this a network request ?
+    shouldLoadFromCache: Boolean // should the cached data be loaded?
 ) {
 
     private val TAG: String = "AppDebug_NetworkBoundResource"
@@ -37,6 +38,14 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     init {
         setJob(initNewJob())
         setValue(DataState.loading(true, null))
+
+        if(shouldLoadFromCache) {
+            val dbSource = loadFromCache()
+            result.addSource(dbSource) {
+                result.removeSource(dbSource)
+                setValue(DataState.loading(isLoading = true, cachedData = it))
+            }
+        }
 
         if(isNetworkRequest){
             // NETWORK REQUESTS
@@ -153,5 +162,9 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     abstract fun createCall() : LiveData<ApiResponse<ResponseObject>>
 
     abstract fun setJob(job: Job)
+
+    abstract fun loadFromCache() : LiveData<ViewStateType>
+
+    abstract suspend fun updateLocalDb(cacheObject: CacheObject?)
 
 }

@@ -3,6 +3,7 @@ package com.anikinkirill.powerfulandroidapp.repository.main
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.switchMap
 import com.anikinkirill.powerfulandroidapp.api.main.OpenApiMainService
 import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
@@ -12,7 +13,10 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountViewState
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @SuppressLint("LongLogTag")
@@ -30,16 +34,26 @@ class AccountRepository
     private var repositoryJob: Job? = null
 
     fun getAccountProperties(authToken: AuthToken): LiveData<DataState<AccountViewState>> {
-        return object : NetworkBoundResource<AccountProperties, AccountViewState>(
+        return object : NetworkBoundResource<AccountProperties, AccountProperties, AccountViewState>(
             sessionManager.isConnectedToTheInternet(),
+            true,
             true
         ) {
             override suspend fun createCacheRequestAndReturn() {
-                TODO("Not yet implemented")
+                withContext(Dispatchers.Main) {
+                    // finish by viewing the db cache
+                    result.addSource(loadFromCache()) { viewState ->
+                        onCompleteJob(DataState.data(
+                            data = viewState,
+                            response = null
+                        ))
+                    }
+                }
             }
 
             override suspend fun handleApiSuccessResponse(response: ApiResponse.ApiSuccessResponse<AccountProperties>) {
-                TODO("Not yet implemented")
+                updateLocalDb(response.body)
+                createCacheRequestAndReturn()
             }
 
             override fun createCall(): LiveData<ApiResponse<AccountProperties>> {
@@ -51,6 +65,28 @@ class AccountRepository
             override fun setJob(job: Job) {
                 repositoryJob?.cancel()
                 repositoryJob = job
+            }
+
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return accountPropertiesDao.searchByPk(authToken.account_pk!!)
+                    .switchMap {
+                        object : LiveData<AccountViewState>() {
+                            override fun onActive() {
+                                super.onActive()
+                                value = AccountViewState(it)
+                            }
+                        }
+                    }
+            }
+
+            override suspend fun updateLocalDb(cacheObject: AccountProperties?) {
+                cacheObject?.let {
+                    accountPropertiesDao.updateAccountProperties(
+                        cacheObject.pk,
+                        cacheObject.email,
+                        cacheObject.username
+                    )
+                }
             }
 
         }.asLiveData()
