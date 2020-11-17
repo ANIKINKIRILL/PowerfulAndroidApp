@@ -37,6 +37,12 @@
             app:exitAnim="@anim/fade_out"
             app:popUpTo="@id/nav_account"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"

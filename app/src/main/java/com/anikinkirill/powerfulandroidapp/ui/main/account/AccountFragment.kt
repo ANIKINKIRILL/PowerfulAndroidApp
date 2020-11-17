@@ -97,7 +97,8 @@ class AccountFragment : BaseAccountFragment() {
     }
 
     private fun navigateToUpdateAccountFragment() {
-        findNavController().navigate(R.id.action_accountFragment_to_updateAccountFragment)
+        val action = AccountFragmentDirections.actionAccountFragmentToUpdateAccountFragment(email.text.toString(), username.text.toString())
+        findNavController().navigate(action)
     }
 
 }
