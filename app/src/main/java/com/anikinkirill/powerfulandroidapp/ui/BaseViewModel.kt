@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
     private val _stateEvent = MutableLiveData<StateEvent>()
-    val _viewState = MutableLiveData<ViewState>()
+    protected val _viewState = MutableLiveData<ViewState>()
 
     val viewState get() = _viewState
 
