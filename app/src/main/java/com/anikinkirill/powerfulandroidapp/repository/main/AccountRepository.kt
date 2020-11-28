@@ -41,6 +41,7 @@ class AccountRepository
             NetworkBoundResource<AccountProperties, AccountProperties, AccountViewState>(
                 sessionManager.isConnectedToTheInternet(),
                 true,
+                false,
                 true
             ) {
             override suspend fun createCacheRequestAndReturn() {
@@ -104,6 +105,7 @@ class AccountRepository
     ): LiveData<DataState<AccountViewState>> {
         return object : NetworkBoundResource<GenericResponse, Any, AccountViewState>(
             sessionManager.isConnectedToTheInternet(),
+            true,
             true,
             false
         ) {

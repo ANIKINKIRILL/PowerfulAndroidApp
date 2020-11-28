@@ -51,7 +51,7 @@ constructor(
             return returnErrorResponse(loginFieldErrors, ResponseType.Dialog())
         }
 
-        return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), true, false) {
+        return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), true, true, false) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<LoginResponse>) {
                 Log.d(TAG, "handleApiSuccessResponse: $response")
                 // Incorrect credentials counts as a 200 response from the server, so need to handle that
@@ -108,7 +108,7 @@ constructor(
             return returnErrorResponse(registerFieldErrors, ResponseType.Dialog())
         }
 
-        return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), true, false) {
+        return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), true, true, false) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<RegistrationResponse>) {
                 Log.d(TAG, "handleApiSuccessResponse: $response")
                 // Incorrect credentials counts as a 200 response from the server, so need to handle that
@@ -166,7 +166,7 @@ constructor(
             return returnNoTokenFound()
         }
 
-        return object : NetworkBoundResource<Void, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), false, false) {
+        return object : NetworkBoundResource<Void, Any, AuthViewState>(sessionManager.isConnectedToTheInternet(), false, false, false) {
 
             override suspend fun createCacheRequestAndReturn() {
                 accountPropertiesDao.searchByEmail(previousAuthUserEmail).let { accountProperties ->
