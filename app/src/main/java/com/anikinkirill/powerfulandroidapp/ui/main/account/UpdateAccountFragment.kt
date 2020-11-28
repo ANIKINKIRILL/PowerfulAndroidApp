@@ -3,6 +3,7 @@ package com.anikinkirill.powerfulandroidapp.ui.main.account
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent
@@ -29,6 +30,13 @@ class UpdateAccountFragment : BaseAccountFragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         setAccountProperties()
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            onDataStateChangeListener.onDataStateChange(dataState)
+        })
     }
 
     private fun setAccountProperties() {
