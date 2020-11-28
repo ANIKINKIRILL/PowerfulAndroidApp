@@ -26,6 +26,7 @@ abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>
     (
     isNetworkAvailable: Boolean, // is there a network connection ?
     isNetworkRequest: Boolean, // is this a network request ?
+    shouldCancelIfNoInternet: Boolean, // should this job be cancelled if there is no internet connection?
     shouldLoadFromCache: Boolean // should the cached data be loaded?
 ) {
 
@@ -50,39 +51,55 @@ abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>
         if(isNetworkRequest){
             // NETWORK REQUESTS
             if(isNetworkAvailable) {
-                coroutineScope.launch {
-                    // a delay for testing purposes
-                    delay(TESTING_NETWORK_DELAY)
-                    withContext(Main) {
-                        // make network call
-                        val apiResponse = createCall()
-                        result.addSource(apiResponse) {
-                            result.removeSource(apiResponse)
-                            coroutineScope.launch {
-                                handleNetworkCall(it)
-                            }
-                        }
-                    }
-                }
-
-                GlobalScope.launch {
-                    delay(NETWORK_TIMEOUT)
-                    if(!job.isCompleted){
-                        Log.d(TAG, "NetworkBoundResource: job is timed out")
-                        job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
-                    }
-                }
+                doNetworkRequest()
             }else {
-                onErrorReturn(UNABLE_TODO_OPERATION_WO_INTERNET, shouldUseDialog = true, shouldUseToast = false)
+                if (shouldCancelIfNoInternet) {
+                    onErrorReturn(
+                        UNABLE_TODO_OPERATION_WO_INTERNET,
+                        shouldUseDialog = true,
+                        shouldUseToast = false
+                    )
+                } else {
+                    doCacheRequest()
+                }
             }
         }else {
-            // CACHE REQUESTS
-            coroutineScope.launch {
-                // Fake delay for testing the cache
-                delay(TESTING_CACHE_DELAY)
+            doCacheRequest()
+        }
+    }
 
-                // View data from the Cache ONLY and return
-                createCacheRequestAndReturn()
+    private fun doCacheRequest() {
+        // CACHE REQUESTS
+        coroutineScope.launch {
+            // Fake delay for testing the cache
+            delay(TESTING_CACHE_DELAY)
+
+            // View data from the Cache ONLY and return
+            createCacheRequestAndReturn()
+        }
+    }
+
+    private fun doNetworkRequest() {
+        coroutineScope.launch {
+            // a delay for testing purposes
+            delay(TESTING_NETWORK_DELAY)
+            withContext(Main) {
+                // make network call
+                val apiResponse = createCall()
+                result.addSource(apiResponse) {
+                    result.removeSource(apiResponse)
+                    coroutineScope.launch {
+                        handleNetworkCall(it)
+                    }
+                }
+            }
+        }
+
+        GlobalScope.launch {
+            delay(NETWORK_TIMEOUT)
+            if(!job.isCompleted){
+                Log.d(TAG, "NetworkBoundResource: job is timed out")
+                job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
             }
         }
     }
