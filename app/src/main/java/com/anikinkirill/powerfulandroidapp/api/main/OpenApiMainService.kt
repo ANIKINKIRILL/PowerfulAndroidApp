@@ -1,10 +1,10 @@
 package com.anikinkirill.powerfulandroidapp.api.main
 
 import androidx.lifecycle.LiveData
+import com.anikinkirill.powerfulandroidapp.api.GenericResponse
 import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
-import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.*
 
 interface OpenApiMainService {
 
@@ -12,5 +12,13 @@ interface OpenApiMainService {
     fun getAccountProperties(
         @Header("Authorization") authorization: String
     ): LiveData<ApiResponse<AccountProperties>>
+
+    @PUT("api/account/properties/update")
+    @FormUrlEncoded
+    fun saveAccountProperties(
+        @Header("Authorization") authorization: String,
+        @Field("email") email: String,
+        @Field("username") username: String
+    ): LiveData<ApiResponse<GenericResponse>>
 
 }
