@@ -33,7 +33,11 @@ class AccountViewModel
                 return AbsentLiveData.create()
             }
             is UpdateAccountPropertiesEvent -> {
-                return AbsentLiveData.create()
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    authToken.account_pk?.let { pk ->
+                        accountRepository.updateAccountProperties(authToken, AccountProperties(pk, event.email, event.username))
+                    }
+                } ?: AbsentLiveData.create()
             }
             is None -> {
                 return AbsentLiveData.create()
