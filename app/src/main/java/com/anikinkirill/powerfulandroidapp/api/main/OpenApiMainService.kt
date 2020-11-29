@@ -21,7 +21,7 @@ interface OpenApiMainService {
         @Field("username") username: String
     ): LiveData<ApiResponse<GenericResponse>>
 
-    @PUT("api/account/change_password")
+    @PUT("api/account/change_password/")
     @FormUrlEncoded
     fun updatePassword(
         @Header("Authorization") authorization: String,
