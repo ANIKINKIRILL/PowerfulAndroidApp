@@ -31,7 +31,12 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Ba
                 authRepository.checkPreviousAuthUser()
             }
             is None -> {
-                AbsentLiveData.create()
+                return object : LiveData<DataState<AuthViewState>>() {
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState.data(null, null)
+                    }
+                }
             }
         }
     }
