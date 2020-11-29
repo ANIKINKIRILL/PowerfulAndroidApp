@@ -1,7 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.repository.main
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
 import com.anikinkirill.powerfulandroidapp.api.GenericResponse
@@ -9,12 +8,12 @@ import com.anikinkirill.powerfulandroidapp.api.main.OpenApiMainService
 import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
+import com.anikinkirill.powerfulandroidapp.repository.JobManager
 import com.anikinkirill.powerfulandroidapp.repository.NetworkBoundResource
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.Response
 import com.anikinkirill.powerfulandroidapp.ui.ResponseType
-import com.anikinkirill.powerfulandroidapp.ui.auth.state.AuthViewState
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
@@ -29,13 +28,11 @@ class AccountRepository
     private val openApiMainService: OpenApiMainService,
     private val accountPropertiesDao: AccountPropertiesDao,
     private val sessionManager: SessionManager
-) {
+): JobManager("AccountRepository") {
 
     companion object {
         private const val TAG = "AppDebug_AccountRepository"
     }
-
-    private var repositoryJob: Job? = null
 
     fun getAccountProperties(authToken: AuthToken): LiveData<DataState<AccountViewState>> {
         return object :
@@ -71,8 +68,7 @@ class AccountRepository
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("getAccountProperties", job)
             }
 
             override fun loadFromCache(): LiveData<AccountViewState> {
@@ -140,8 +136,7 @@ class AccountRepository
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("updateAccountProperties", job)
             }
 
             // not used in this case
@@ -200,8 +195,7 @@ class AccountRepository
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("updatePassword", job)
             }
 
             // not used in this case
@@ -215,9 +209,4 @@ class AccountRepository
             }
         }.asLiveData()
     }
-
-    fun cancelActiveJobs() {
-        Log.d(TAG, "cancelActiveJobs: called")
-    }
-
 }
