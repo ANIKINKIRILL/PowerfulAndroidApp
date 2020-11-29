@@ -30,7 +30,14 @@ class AccountViewModel
                 } ?: AbsentLiveData.create()
             }
             is ChangePasswordEvent -> {
-                return AbsentLiveData.create()
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    accountRepository.updatePassword(
+                        authToken,
+                        event.currentPassword,
+                        event.newPassword,
+                        event.confirmNewPassword
+                    )
+                } ?: AbsentLiveData.create()
             }
             is UpdateAccountPropertiesEvent -> {
                 return sessionManager.cachedToken.value?.let { authToken ->
