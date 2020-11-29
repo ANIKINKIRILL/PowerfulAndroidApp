@@ -30,6 +30,9 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Ba
             is CheckPreviousAuthEvent -> {
                 authRepository.checkPreviousAuthUser()
             }
+            is None -> {
+                AbsentLiveData.create()
+            }
         }
     }
 
