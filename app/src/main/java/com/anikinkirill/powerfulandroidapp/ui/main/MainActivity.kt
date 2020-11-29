@@ -11,10 +11,14 @@ import androidx.navigation.NavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.BaseActivity
 import com.anikinkirill.powerfulandroidapp.ui.auth.AuthActivity
+import com.anikinkirill.powerfulandroidapp.ui.auth.BaseAuthFragment
+import com.anikinkirill.powerfulandroidapp.ui.main.account.BaseAccountFragment
 import com.anikinkirill.powerfulandroidapp.ui.main.account.ChangePasswordFragment
 import com.anikinkirill.powerfulandroidapp.ui.main.account.UpdateAccountFragment
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.BaseBlogFragment
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.UpdateBlogFragment
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.ViewBlogFragment
+import com.anikinkirill.powerfulandroidapp.ui.main.create_blog.BaseCreateBlogFragment
 import com.anikinkirill.powerfulandroidapp.util.BottomNavController
 import com.anikinkirill.powerfulandroidapp.util.BottomNavController.*
 import com.anikinkirill.powerfulandroidapp.util.setUpNavigation
@@ -73,6 +77,26 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
 
     override fun onGraphChange() {
         expandAppBar()
+        cancelActiveJobs()
+    }
+
+    private fun cancelActiveJobs() {
+        val fragments = bottomNavController.fragmentManager
+            .findFragmentById(bottomNavController.containerId)
+            ?.childFragmentManager
+            ?.fragments
+
+        if (fragments != null) {
+            for (fragment in fragments) {
+                when (fragment) {
+                    is BaseBlogFragment -> {}
+                    is BaseCreateBlogFragment -> {}
+                    is BaseAccountFragment -> fragment.cancelActiveJobs()
+                }
+            }
+        }
+
+        displayProgressBar(false)
     }
 
     override fun onReselectNavItem(navController: NavController, fragment: Fragment) {

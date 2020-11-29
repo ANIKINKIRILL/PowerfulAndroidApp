@@ -29,7 +29,7 @@ abstract class BaseAuthFragment : DaggerFragment() {
 
     }
 
-    private fun cancelActiveJobs() {
+    fun cancelActiveJobs() {
         authViewModel.cancelActiveJobs()
     }
 

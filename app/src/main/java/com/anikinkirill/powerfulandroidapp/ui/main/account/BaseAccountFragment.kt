@@ -59,7 +59,7 @@ abstract class BaseAccountFragment : DaggerFragment() {
         }
     }
 
-    private fun cancelActiveJobs() {
+    fun cancelActiveJobs() {
         viewModel.cancelActiveJobs()
     }
 
