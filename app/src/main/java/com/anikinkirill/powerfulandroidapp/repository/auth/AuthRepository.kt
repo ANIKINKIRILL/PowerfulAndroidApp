@@ -10,6 +10,7 @@ import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
 import com.anikinkirill.powerfulandroidapp.persitence.AuthTokenDao
+import com.anikinkirill.powerfulandroidapp.repository.JobManager
 import com.anikinkirill.powerfulandroidapp.repository.NetworkBoundResource
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
@@ -37,13 +38,11 @@ constructor(
     val sessionManager: SessionManager,
     val sharedPreferences: SharedPreferences,
     val editor: SharedPreferences.Editor
-) {
+): JobManager("AuthRepository") {
 
     companion object {
         private const val TAG = "AppDebug_AuthRepository"
     }
-
-    private var repositoryJob: Job? = null
 
     fun attemptLogin(email: String, password: String) : LiveData<DataState<AuthViewState>> {
         val loginFieldErrors = LoginFields(email, password).isValidForLogin()
@@ -80,8 +79,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptLogin", job)
             }
 
             // not used in this case
@@ -137,8 +135,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptRegister", job)
             }
 
             // not used in this case
@@ -197,8 +194,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("checkPreviousAuthUser", job)
             }
 
             // not used in this case
@@ -235,10 +231,5 @@ constructor(
                 value = DataState.error(Response(errorMessage, responseType))
             }
         }
-    }
-
-    fun cancelActiveJobs() {
-        Log.d(TAG, "AuthRepository: canceling on-going jobs")
-        repositoryJob?.cancel()
     }
 }
