@@ -58,6 +58,10 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Ba
         authRepository.cancelActiveJobs()
     }
 
+    private fun handlePendingData() {
+        setStateEvent(None())
+    }
+
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
