@@ -51,6 +51,7 @@ class UpdateAccountFragment : BaseAccountFragment() {
                 input_username.text.toString()
             )
         )
+        onDataStateChangeListener.hideSoftKeyboard()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
