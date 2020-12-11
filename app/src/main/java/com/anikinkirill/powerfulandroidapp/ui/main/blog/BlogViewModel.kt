@@ -11,6 +11,7 @@ import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.*
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
+import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 
 class BlogViewModel
@@ -47,7 +48,7 @@ class BlogViewModel
         _viewState.value = update
     }
 
-    private fun cancelActiveJobs() {
+    fun cancelActiveJobs() {
         blogPostRepository.cancelActiveJobs()
         handlePendingData()
     }

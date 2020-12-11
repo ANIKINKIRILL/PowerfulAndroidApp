@@ -89,7 +89,7 @@ class MainActivity : BaseActivity(), NavGraphProvider, OnNavigationGraphChanged,
         if (fragments != null) {
             for (fragment in fragments) {
                 when (fragment) {
-                    is BaseBlogFragment -> {}
+                    is BaseBlogFragment -> fragment.cancelActiveJobs()
                     is BaseCreateBlogFragment -> {}
                     is BaseAccountFragment -> fragment.cancelActiveJobs()
                 }

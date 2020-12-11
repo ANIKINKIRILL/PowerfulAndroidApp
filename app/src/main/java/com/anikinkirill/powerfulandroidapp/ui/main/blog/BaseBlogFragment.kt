@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
+import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 @SuppressLint("LongLogTag")
 abstract class BaseBlogFragment : DaggerFragment() {
@@ -20,11 +23,20 @@ abstract class BaseBlogFragment : DaggerFragment() {
         const val TAG = "AppDebug_BaseBlogFragment"
     }
 
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
+    lateinit var viewModel: BlogViewModel
+
     lateinit var onDataStateChangeListener: DataStateChangeListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.blogFragment, activity as AppCompatActivity)
+        viewModel = activity?.run {
+            ViewModelProvider(this, providerFactory).get(BlogViewModel::class.java)
+        } ?: throw Exception("Invalid activity")
+        cancelActiveJobs()
     }
 
     private fun setupActionBarWithNavController(fragmentId: Int, activity: AppCompatActivity) {
@@ -43,6 +55,10 @@ abstract class BaseBlogFragment : DaggerFragment() {
         }catch (e: Exception) {
             Log.d(TAG, "onAttach: ${e.message}")
         }
+    }
+
+    fun cancelActiveJobs() {
+        viewModel.cancelActiveJobs()
     }
 
 }
