@@ -2,7 +2,10 @@ package com.anikinkirill.powerfulandroidapp.di.main
 
 import com.anikinkirill.powerfulandroidapp.api.main.OpenApiMainService
 import com.anikinkirill.powerfulandroidapp.persitence.AccountPropertiesDao
+import com.anikinkirill.powerfulandroidapp.persitence.AppDatabase
+import com.anikinkirill.powerfulandroidapp.persitence.BlogPostDao
 import com.anikinkirill.powerfulandroidapp.repository.main.AccountRepository
+import com.anikinkirill.powerfulandroidapp.repository.main.BlogRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -25,6 +28,22 @@ class MainModule {
         sessionManager: SessionManager
     ) : AccountRepository {
         return AccountRepository(openApiMainService, accountPropertiesDao, sessionManager)
+    }
+
+    @MainScope
+    @Provides
+    fun provideBlogPostDao(database: AppDatabase) : BlogPostDao {
+        return database.getBlogPostDao()
+    }
+
+    @MainScope
+    @Provides
+    fun provideBlogRepository(
+        openApiMainService: OpenApiMainService,
+        blogPostDao: BlogPostDao,
+        sessionManager: SessionManager
+    ) : BlogRepository {
+        return BlogRepository(openApiMainService, blogPostDao, sessionManager)
     }
 
 }
