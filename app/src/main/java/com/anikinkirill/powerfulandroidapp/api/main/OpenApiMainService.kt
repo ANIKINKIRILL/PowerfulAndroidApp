@@ -2,6 +2,7 @@ package com.anikinkirill.powerfulandroidapp.api.main
 
 import androidx.lifecycle.LiveData
 import com.anikinkirill.powerfulandroidapp.api.GenericResponse
+import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogListSearchResponse
 import com.anikinkirill.powerfulandroidapp.models.AccountProperties
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import retrofit2.http.*
@@ -29,5 +30,11 @@ interface OpenApiMainService {
         @Field("new_password") newPassword: String,
         @Field("confirm_new_password") confirmNewPassword: String
     ): LiveData<ApiResponse<GenericResponse>>
+
+    @GET("api/blog/list")
+    fun searchListBlogPosts(
+        @Header("Authorization") authorization: String,
+        @Query("search") query: String
+    ): LiveData<ApiResponse<BlogListSearchResponse>>
 
 }
