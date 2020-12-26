@@ -8,7 +8,8 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.*
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.None
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
 import com.bumptech.glide.RequestManager
@@ -28,7 +29,14 @@ class BlogViewModel
 
     override fun handleStateEvent(event: BlogStateEvent): LiveData<DataState<BlogViewState>> {
         return when (event) {
-            is BlogSearchEvent -> AbsentLiveData.create()
+            is BlogSearchEvent -> {
+                sessionManager.cachedToken.value?.let { token ->
+                    blogPostRepository.searchBlogPosts(
+                        token,
+                        viewState.value!!.blogFields.searchQuery
+                    )
+                } ?: AbsentLiveData.create()
+            }
             is None -> AbsentLiveData.create()
         }
     }
