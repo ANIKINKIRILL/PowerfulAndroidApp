@@ -3,10 +3,11 @@ package com.anikinkirill.powerfulandroidapp.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogSearchResponse
+import com.anikinkirill.powerfulandroidapp.util.DateUtils
 
 @Entity(tableName = "blog_post")
 data class BlogPost(
-
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "pk")
     var pk: Int,
@@ -28,9 +29,17 @@ data class BlogPost(
 
     @ColumnInfo(name = "username")
     var username: String
-
-
 ) {
+
+    constructor(response: BlogSearchResponse): this (
+        response.pk,
+        response.title,
+        response.slug,
+        response.body,
+        response.image,
+        DateUtils.convertServerStringDateToLong(response.date_updated),
+        response.username
+    )
 
     override fun toString(): String {
         return "BlogPost(pk=$pk, " +
@@ -40,5 +49,4 @@ data class BlogPost(
                 "date_updated=$date_updated, " +
                 "username='$username')"
     }
-
 }

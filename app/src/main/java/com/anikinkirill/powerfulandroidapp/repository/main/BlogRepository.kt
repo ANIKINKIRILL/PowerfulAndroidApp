@@ -49,15 +49,7 @@ class BlogRepository
 
             override suspend fun handleApiSuccessResponse(response: ApiResponse.ApiSuccessResponse<BlogListSearchResponse>) {
                 val blogPostList = response.body.results.map {
-                    BlogPost(
-                        it.pk,
-                        it.title,
-                        it.slug,
-                        it.body,
-                        it.image,
-                        DateUtils.convertServerStringDateToLong(it.date_updated),
-                        it.username
-                    )
+                    BlogPost(it)
                 }
                 updateLocalDb(blogPostList)
                 createCacheRequestAndReturn()
