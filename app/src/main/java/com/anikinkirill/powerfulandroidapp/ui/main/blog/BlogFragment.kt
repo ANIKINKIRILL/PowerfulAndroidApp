@@ -37,7 +37,7 @@ class BlogFragment : BaseBlogFragment() {
     }
 
     private fun executeSearch() {
-        viewModel.setQuery("")
+        viewModel.setQuery(" ")
         viewModel.setStateEvent(BlogSearchEvent())
     }
 
