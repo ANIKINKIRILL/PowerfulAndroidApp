@@ -41,6 +41,16 @@ data class BlogPost(
         response.username
     )
 
+    constructor(placeHolderPk: Int): this (
+        placeHolderPk,
+        "",
+        "",
+        "",
+        "",
+        0,
+        ""
+    )
+
     override fun toString(): String {
         return "BlogPost(pk=$pk, " +
                 "title='$title', " +
