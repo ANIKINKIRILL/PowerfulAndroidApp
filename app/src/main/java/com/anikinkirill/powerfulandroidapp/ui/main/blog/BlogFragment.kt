@@ -7,15 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anikinkirill.powerfulandroidapp.R
+import com.anikinkirill.powerfulandroidapp.models.BlogPost
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_blog.*
+import javax.inject.Inject
 
-class BlogFragment : BaseBlogFragment() {
+class BlogFragment : BaseBlogFragment(), Interaction {
 
     companion object {
         private const val TAG = "AppDebug_BlogFragment"
     }
+
+    @Inject
+    lateinit var requestManager: RequestManager
+
+    private lateinit var recyclerAdapter: BlogListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +45,30 @@ class BlogFragment : BaseBlogFragment() {
 
         subscribeObservers()
         executeSearch()
+    }
+
+    private fun initBlogListRecyclerView() {
+        blog_post_recyclerview.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            // TODO add item decoration for top margin
+            recyclerAdapter = BlogListAdapter(
+                interaction = this@BlogFragment,
+                requestManager = requestManager
+            )
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+                    if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
+                        Log.d(TAG, "Loading next page ...")
+                    }
+                }
+            })
+
+            adapter = recyclerAdapter
+        }
     }
 
     private fun executeSearch() {
@@ -58,5 +93,9 @@ class BlogFragment : BaseBlogFragment() {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             Log.d(TAG, "BlogFragment, ViewState: $viewState")
         })
+    }
+
+    override fun onItemSelected(position: Int, item: BlogPost) {
+        Log.d(TAG, "onItemSelected: $position, $item")
     }
 }
