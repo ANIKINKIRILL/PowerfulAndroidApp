@@ -95,7 +95,12 @@ class BlogFragment : BaseBlogFragment(), Interaction {
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            Log.d(TAG, "BlogFragment, ViewState: $viewState")
+            viewState?.let {
+                recyclerAdapter.submitList(
+                    list = it.blogFields.blogList,
+                    isQueryExhausted = true
+                )
+            }
         })
     }
 
