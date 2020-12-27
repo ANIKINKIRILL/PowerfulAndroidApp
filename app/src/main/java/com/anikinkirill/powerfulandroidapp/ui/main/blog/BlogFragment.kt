@@ -13,6 +13,7 @@ import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
+import com.anikinkirill.powerfulandroidapp.util.TopSpacingItemDecoration
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_blog.*
 import javax.inject.Inject
@@ -50,7 +51,9 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     private fun initBlogListRecyclerView() {
         blog_post_recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            // TODO add item decoration for top margin
+            val topSpacingItemDecoration = TopSpacingItemDecoration(30)
+            removeItemDecoration(topSpacingItemDecoration)
+            addItemDecoration(topSpacingItemDecoration)
             recyclerAdapter = BlogListAdapter(
                 interaction = this@BlogFragment,
                 requestManager = requestManager
