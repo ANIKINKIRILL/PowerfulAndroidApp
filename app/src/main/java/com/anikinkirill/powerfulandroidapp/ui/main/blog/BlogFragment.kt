@@ -44,6 +44,7 @@ class BlogFragment : BaseBlogFragment(), Interaction {
             findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
         }
 
+        initBlogListRecyclerView()
         subscribeObservers()
         executeSearch()
     }
