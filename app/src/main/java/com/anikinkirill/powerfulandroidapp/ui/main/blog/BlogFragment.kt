@@ -107,4 +107,10 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     override fun onItemSelected(position: Int, item: BlogPost) {
         Log.d(TAG, "onItemSelected: $position, $item")
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Avoid memory leaks when view is destroyed
+        blog_post_recyclerview.adapter = null
+    }
 }
