@@ -8,8 +8,7 @@ import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.None
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.*
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
 import com.bumptech.glide.RequestManager
@@ -37,6 +36,11 @@ class BlogViewModel
                     )
                 } ?: AbsentLiveData.create()
             }
+
+            is CheckAuthorOfBlogPost -> {
+               return AbsentLiveData.create()
+            }
+
             is None -> AbsentLiveData.create()
         }
     }
