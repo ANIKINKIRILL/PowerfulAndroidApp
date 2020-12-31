@@ -14,18 +14,13 @@ import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
 import com.anikinkirill.powerfulandroidapp.util.TopSpacingItemDecoration
-import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_blog.*
-import javax.inject.Inject
 
 class BlogFragment : BaseBlogFragment(), Interaction {
 
     companion object {
         private const val TAG = "AppDebug_BlogFragment"
     }
-
-    @Inject
-    lateinit var requestManager: RequestManager
 
     private lateinit var recyclerAdapter: BlogListAdapter
 
