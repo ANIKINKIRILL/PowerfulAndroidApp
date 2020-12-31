@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anikinkirill.powerfulandroidapp.R
@@ -99,7 +100,8 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     }
 
     override fun onItemSelected(position: Int, item: BlogPost) {
-        Log.d(TAG, "onItemSelected: $position, $item")
+        viewModel.setBlogPost(item)
+        findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
     }
 
     override fun onDestroyView() {
