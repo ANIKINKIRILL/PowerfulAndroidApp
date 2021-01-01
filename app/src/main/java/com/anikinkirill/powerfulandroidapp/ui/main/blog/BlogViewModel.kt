@@ -72,6 +72,18 @@ class BlogViewModel
         _viewState.value = update
     }
 
+    fun setQueryExhausted(isExhausted: Boolean) {
+        val update = getCurrentViewStateOrNew()
+        update.blogFields.isQueryExhausted = isExhausted
+        _viewState.value = update
+    }
+
+    fun setQueryInProgress(isInProgress: Boolean) {
+        val update = getCurrentViewStateOrNew()
+        update.blogFields.isQueryInProgress = isInProgress
+        _viewState.value = update
+    }
+
     fun cancelActiveJobs() {
         blogPostRepository.cancelActiveJobs()
         handlePendingData()
