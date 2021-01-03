@@ -1,6 +1,7 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 
 /**
  * Sets page value equals 1, so resetting
@@ -46,4 +47,10 @@ fun BlogViewModel.nextPage() {
         setQueryInProgress(true)
         setStateEvent(BlogSearchEvent())
     }
+}
+
+fun BlogViewModel.handleIncomingBlogListData(viewState: BlogViewState) {
+    setQueryExhausted(viewState.blogFields.isQueryExhausted)
+    setQueryInProgress(viewState.blogFields.isQueryInProgress)
+    setBlogPostList(viewState.blogFields.blogList)
 }

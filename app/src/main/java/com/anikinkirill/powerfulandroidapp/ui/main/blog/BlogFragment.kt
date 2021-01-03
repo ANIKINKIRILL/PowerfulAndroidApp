@@ -1,7 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
+import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setBlogPost
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setBlogPostList
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setQuery
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.*
+import com.anikinkirill.powerfulandroidapp.util.ErrorHandling
 import com.anikinkirill.powerfulandroidapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
 
@@ -39,7 +39,9 @@ class BlogFragment : BaseBlogFragment(), Interaction {
         super.onViewCreated(view, savedInstanceState)
         initBlogListRecyclerView()
         subscribeObservers()
-        executeSearch()
+        if (savedInstanceState == null) {
+            viewModel.loadFirstPage()
+        }
     }
 
     private fun initBlogListRecyclerView() {
@@ -59,7 +61,7 @@ class BlogFragment : BaseBlogFragment(), Interaction {
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val lastPosition = layoutManager.findLastVisibleItemPosition()
                     if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
-                        Log.d(TAG, "Loading next page ...")
+                        viewModel.nextPage()
                     }
                 }
             })
@@ -76,14 +78,8 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             dataState?.let {
+                handlePagination(it)
                 onDataStateChangeListener.onDataStateChange(it)
-                it.data?.let { data ->
-                    data.data?.let { event ->
-                        event.getContentIfNotHandled()?.let { viewState ->
-                            viewModel.setBlogPostList(viewState.blogFields.blogList)
-                        }
-                    }
-                }
             }
         })
 
@@ -91,10 +87,29 @@ class BlogFragment : BaseBlogFragment(), Interaction {
             viewState?.let {
                 recyclerAdapter.submitList(
                     list = it.blogFields.blogList,
-                    isQueryExhausted = true
+                    isQueryExhausted = it.blogFields.isQueryExhausted
                 )
             }
         })
+    }
+
+    private fun handlePagination(dataState: DataState<BlogViewState>) {
+        dataState.data?.let {
+            it.data?.let {
+                it.getContentIfNotHandled()?.let {
+                    viewModel.handleIncomingBlogListData(it)
+                }
+            }
+        }
+
+        dataState.error?.let { event ->
+            event.peekContent().response.message?.let {
+                if (ErrorHandling.isPaginationDone(it)) {
+                    event.getContentIfNotHandled()
+                    viewModel.setQueryExhausted(true)
+                }
+            }
+        }
     }
 
     override fun onItemSelected(position: Int, item: BlogPost) {
