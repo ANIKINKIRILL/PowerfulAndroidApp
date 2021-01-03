@@ -13,6 +13,9 @@ import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setBlogPost
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setBlogPostList
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setQuery
 import com.anikinkirill.powerfulandroidapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
 

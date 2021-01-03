@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.BlogViewModel
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import com.bumptech.glide.RequestManager
 import dagger.android.support.DaggerFragment

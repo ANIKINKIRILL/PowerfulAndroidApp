@@ -1,8 +1,7 @@
-package com.anikinkirill.powerfulandroidapp.ui.main.blog
+package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.repository.main.BlogRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
@@ -45,45 +44,6 @@ class BlogViewModel
         }
     }
 
-    fun setQuery(query: String) {
-        val update = getCurrentViewStateOrNew()
-        if (query == update.blogFields.searchQuery) {
-            return
-        }
-        update.blogFields.searchQuery = query
-        _viewState.value = update
-    }
-
-    fun setBlogPostList(blogList: List<BlogPost>) {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.blogList = blogList
-        _viewState.value = update
-    }
-
-    fun setBlogPost(blogPost: BlogPost) {
-        val update = getCurrentViewStateOrNew()
-        update.viewBlogFields.blogPost = blogPost
-        _viewState.value = update
-    }
-
-    fun setIsAuthorOfBlogPost(isAuthorOfBlogPost: Boolean) {
-        val update = getCurrentViewStateOrNew()
-        update.viewBlogFields.isAuthorOfBlogPost = isAuthorOfBlogPost
-        _viewState.value = update
-    }
-
-    fun setQueryExhausted(isExhausted: Boolean) {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.isQueryExhausted = isExhausted
-        _viewState.value = update
-    }
-
-    fun setQueryInProgress(isInProgress: Boolean) {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.isQueryInProgress = isInProgress
-        _viewState.value = update
-    }
-
     fun cancelActiveJobs() {
         blogPostRepository.cancelActiveJobs()
         handlePendingData()
@@ -97,5 +57,4 @@ class BlogViewModel
         super.onCleared()
         cancelActiveJobs()
     }
-
 }
