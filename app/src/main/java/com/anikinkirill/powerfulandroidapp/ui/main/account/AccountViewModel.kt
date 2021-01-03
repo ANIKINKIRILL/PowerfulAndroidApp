@@ -6,6 +6,7 @@ import com.anikinkirill.powerfulandroidapp.repository.main.AccountRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
 import com.anikinkirill.powerfulandroidapp.ui.DataState
+import com.anikinkirill.powerfulandroidapp.ui.Loading
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountStateEvent.*
 import com.anikinkirill.powerfulandroidapp.ui.main.account.state.AccountViewState
@@ -47,7 +48,16 @@ class AccountViewModel
                 } ?: AbsentLiveData.create()
             }
             is None -> {
-                return AbsentLiveData.create()
+                return object : LiveData<DataState<AccountViewState>>() {
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState(
+                            null,
+                            Loading(false),
+                            null
+                        )
+                    }
+                }
             }
         }
     }

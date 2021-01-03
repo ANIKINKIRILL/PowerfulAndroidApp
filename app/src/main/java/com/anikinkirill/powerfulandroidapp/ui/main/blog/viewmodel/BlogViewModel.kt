@@ -6,6 +6,7 @@ import com.anikinkirill.powerfulandroidapp.repository.main.BlogRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
 import com.anikinkirill.powerfulandroidapp.ui.DataState
+import com.anikinkirill.powerfulandroidapp.ui.Loading
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.*
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
@@ -41,7 +42,18 @@ class BlogViewModel
                return AbsentLiveData.create()
             }
 
-            is None -> AbsentLiveData.create()
+            is None -> {
+                return object : LiveData<DataState<BlogViewState>>() {
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState(
+                            null,
+                            Loading(false),
+                            null
+                        )
+                    }
+                }
+            }
         }
     }
 
