@@ -31,7 +31,8 @@ class BlogViewModel
                 sessionManager.cachedToken.value?.let { token ->
                     blogPostRepository.searchBlogPosts(
                         token,
-                        viewState.value!!.blogFields.searchQuery
+                        getSearchQuery(),
+                        getPage()
                     )
                 } ?: AbsentLiveData.create()
             }
