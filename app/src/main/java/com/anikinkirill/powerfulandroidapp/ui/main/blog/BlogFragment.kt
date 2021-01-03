@@ -12,7 +12,6 @@ import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.*
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling
@@ -68,11 +67,6 @@ class BlogFragment : BaseBlogFragment(), Interaction {
 
             adapter = recyclerAdapter
         }
-    }
-
-    private fun executeSearch() {
-        viewModel.setQuery(" ")
-        viewModel.setStateEvent(BlogSearchEvent())
     }
 
     private fun subscribeObservers() {

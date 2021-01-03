@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
+import android.util.Log
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.BlogSearchEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 
@@ -43,6 +44,7 @@ fun BlogViewModel.incrementPageNumber() {
 
 fun BlogViewModel.nextPage() {
     if (!getIsQueryInProgress() && !getIsQueryExhausted()) {
+        Log.d("AppDebug_Pagination", "nextPage: trying to load next page...")
         incrementPageNumber()
         setQueryInProgress(true)
         setStateEvent(BlogSearchEvent())
