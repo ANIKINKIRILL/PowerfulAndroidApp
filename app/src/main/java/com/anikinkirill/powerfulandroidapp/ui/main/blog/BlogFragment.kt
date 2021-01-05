@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.DataState
@@ -21,7 +23,7 @@ import com.anikinkirill.powerfulandroidapp.util.ErrorHandling
 import com.anikinkirill.powerfulandroidapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
 
-class BlogFragment : BaseBlogFragment(), Interaction {
+class BlogFragment : BaseBlogFragment(), Interaction, SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         private const val TAG = "AppDebug_BlogFragment"
@@ -41,6 +43,8 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        swipe_refresh.setOnRefreshListener(this)
         initBlogListRecyclerView()
         subscribeObservers()
         if (savedInstanceState == null) {
@@ -169,5 +173,10 @@ class BlogFragment : BaseBlogFragment(), Interaction {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_menu, menu)
         initSearchView(menu)
+    }
+
+    override fun onRefresh() {
+        onBlogSearchOrFilter()
+        swipe_refresh.isRefreshing = false
     }
 }
