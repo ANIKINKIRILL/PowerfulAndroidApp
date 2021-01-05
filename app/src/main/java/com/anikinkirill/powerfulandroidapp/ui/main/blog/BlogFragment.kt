@@ -43,6 +43,18 @@ class BlogFragment : BaseBlogFragment(), Interaction {
         }
     }
 
+    private fun onBlogSearchOrFilter() {
+        viewModel.loadFirstPage().let {
+            resetUI()
+        }
+    }
+
+    private fun resetUI() {
+        blog_post_recyclerview.smoothScrollToPosition(0)
+        onDataStateChangeListener.hideSoftKeyboard()
+        focusable_view.requestFocus()
+    }
+
     private fun initBlogListRecyclerView() {
         blog_post_recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext())
