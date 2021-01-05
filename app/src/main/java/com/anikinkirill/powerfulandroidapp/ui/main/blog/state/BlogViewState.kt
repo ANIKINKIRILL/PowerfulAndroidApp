@@ -1,6 +1,8 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog.state
 
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils.Companion.ORDER_BY_ASC_DATE_UPDATED
 
 data class BlogViewState(
     // BlogFragment vars
@@ -17,7 +19,9 @@ data class BlogViewState(
         var searchQuery: String = "",
         var page: Int = 1,
         var isQueryInProgress: Boolean = false,
-        var isQueryExhausted: Boolean = false
+        var isQueryExhausted: Boolean = false,
+        var filter: String = ORDER_BY_ASC_DATE_UPDATED,
+        var order: String = BLOG_ORDER_ASC
     )
 
     data class ViewBlogFields(
