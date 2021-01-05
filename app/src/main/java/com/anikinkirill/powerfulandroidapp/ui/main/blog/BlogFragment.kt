@@ -1,9 +1,15 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog
 
+import android.app.SearchManager
+import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +31,7 @@ class BlogFragment : BaseBlogFragment(), Interaction {
     }
 
     private lateinit var recyclerAdapter: BlogListAdapter
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,6 +104,37 @@ class BlogFragment : BaseBlogFragment(), Interaction {
                 )
             }
         })
+    }
+
+    private fun initSearchView(menu: Menu) {
+        activity?.apply {
+            val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
+            searchView = menu.findItem(R.id.action_search).actionView as SearchView
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            searchView.maxWidth = Integer.MAX_VALUE
+            searchView.setIconifiedByDefault(true)
+            searchView.isSubmitButtonEnabled = true
+        }
+
+        // case 1: WHEN USER CLICKS ON SUBMIT BUTTON NEAR KEYBOARD
+        val searchPlate = searchView.findViewById(R.id.search_src_text) as EditText
+        searchPlate.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED || actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val searchQuery = v.text.toString()
+                viewModel.setQuery(searchQuery).let {
+                    onBlogSearchOrFilter()
+                }
+            }
+            true
+        }
+
+        // case 2: WHEN USER CLICKS ON SUBMIT BUTTON IN SEARCH VIEW TOOLBAR
+        searchView.findViewById<View>(R.id.search_go_btn).setOnClickListener {
+            val searchQuery = searchPlate.text.toString()
+            viewModel.setQuery(searchQuery).let {
+                onBlogSearchOrFilter()
+            }
+        }
     }
 
     private fun handlePagination(dataState: DataState<BlogViewState>) {
