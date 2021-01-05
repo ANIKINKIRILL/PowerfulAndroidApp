@@ -3,10 +3,7 @@ package com.anikinkirill.powerfulandroidapp.ui.main.blog
 import android.app.SearchManager
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
@@ -43,6 +40,7 @@ class BlogFragment : BaseBlogFragment(), Interaction {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         initBlogListRecyclerView()
         subscribeObservers()
         if (savedInstanceState == null) {
@@ -165,5 +163,11 @@ class BlogFragment : BaseBlogFragment(), Interaction {
         super.onDestroyView()
         // Avoid memory leaks when view is destroyed
         blog_post_recyclerview.adapter = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.search_menu, menu)
+        initSearchView(menu)
     }
 }
