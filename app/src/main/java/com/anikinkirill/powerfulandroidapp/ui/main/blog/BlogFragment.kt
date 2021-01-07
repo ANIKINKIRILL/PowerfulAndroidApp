@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -13,8 +16,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils.Companion.BLOG_FILTER_USERNAME
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
 import com.anikinkirill.powerfulandroidapp.ui.DataState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BlogListAdapter.Interaction
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
@@ -182,9 +191,59 @@ class BlogFragment : BaseBlogFragment(), Interaction, SwipeRefreshLayout.OnRefre
 
     private fun showFilterOptions() {
         // 0. show dialog
-        // 1. highlight previous options from SharedPreferences
-        // 2. listen for new applied filters
-        // 3. set the filter and order in the viewmodel
-        // 4. save to SharedPreferences
+        activity?.let {
+            val dialog = MaterialDialog(it)
+                .noAutoDismiss()
+                .customView(R.layout.layout_blog_filter)
+            val view = dialog.getCustomView()
+
+            // 1. highlight previous options from SharedPreferences
+            val filter = viewModel.getBlogFilter()
+            val order = viewModel.getBlogOrder()
+            if (filter == BLOG_FILTER_DATE_UPDATED) {
+                view.findViewById<RadioGroup>(R.id.filter_group).check(R.id.filter_date)
+            } else {
+                view.findViewById<RadioGroup>(R.id.filter_group).check(R.id.filter_author)
+            }
+
+            if (order == BLOG_ORDER_ASC) {
+                view.findViewById<RadioGroup>(R.id.order_group).check(R.id.filter_asc)
+            } else {
+                view.findViewById<RadioGroup>(R.id.order_group).check(R.id.filter_desc)
+            }
+
+            // 2. listen for newly applied filters
+            view.findViewById<TextView>(R.id.positive_button).setOnClickListener {
+                val selectedFilter = view.findViewById<RadioButton>(
+                    view.findViewById<RadioGroup>(R.id.filter_group).checkedRadioButtonId
+                )
+                val selectedOrder = view.findViewById<RadioButton>(
+                    view.findViewById<RadioGroup>(R.id.order_group).checkedRadioButtonId
+                )
+                var filterOption = BLOG_FILTER_DATE_UPDATED
+                if (selectedFilter.text.toString() == getString(R.string.filter_author)) {
+                    filterOption = BLOG_FILTER_USERNAME
+                }
+                var orderOption = ""
+                if (selectedOrder.text.toString() == getString(R.string.filter_desc)) {
+                    orderOption = "-"
+                }
+
+                // 3. set the filter and order in the viewmodel
+                // 4. save to SharedPreferences
+                viewModel.saveFilterOptions(filterOption, orderOption).let {
+                    viewModel.setBlogFilter(filterOption)
+                    viewModel.setBlogOrder(orderOption)
+                    onBlogSearchOrFilter()
+                }
+                dialog.dismiss()
+            }
+
+            view.findViewById<TextView>(R.id.negative_button).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
 }
