@@ -184,6 +184,16 @@ class BlogFragment : BaseBlogFragment(), Interaction, SwipeRefreshLayout.OnRefre
         initSearchView(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter_settings -> {
+                showFilterOptions()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onRefresh() {
         onBlogSearchOrFilter()
         swipe_refresh.isRefreshing = false
