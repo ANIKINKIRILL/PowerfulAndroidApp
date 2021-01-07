@@ -179,4 +179,12 @@ class BlogFragment : BaseBlogFragment(), Interaction, SwipeRefreshLayout.OnRefre
         onBlogSearchOrFilter()
         swipe_refresh.isRefreshing = false
     }
+
+    private fun showFilterOptions() {
+        // 0. show dialog
+        // 1. highlight previous options from SharedPreferences
+        // 2. listen for new applied filters
+        // 3. set the filter and order in the viewmodel
+        // 4. save to SharedPreferences
+    }
 }

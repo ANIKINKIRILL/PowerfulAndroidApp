@@ -2,6 +2,7 @@
   <dictionary name="kyani">
     <words>
       <w>gson</w>
+      <w>viewmodel</w>
     </words>
   </dictionary>
 </component>
