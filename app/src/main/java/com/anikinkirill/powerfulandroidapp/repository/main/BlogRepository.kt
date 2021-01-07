@@ -8,6 +8,7 @@ import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogListSearchResp
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.persitence.BlogPostDao
+import com.anikinkirill.powerfulandroidapp.persitence.returnOrderedBlogQuery
 import com.anikinkirill.powerfulandroidapp.repository.JobManager
 import com.anikinkirill.powerfulandroidapp.repository.NetworkBoundResource
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
@@ -32,7 +33,12 @@ class BlogRepository
         private const val TAG = "AppDebug_BlogRepository"
     }
 
-    fun searchBlogPosts(authToken: AuthToken, query: String, page: Int): LiveData<DataState<BlogViewState>> {
+    fun searchBlogPosts(
+        authToken: AuthToken,
+        query: String,
+        filterAndOrder: String,
+        page: Int
+    ): LiveData<DataState<BlogViewState>> {
         return object : NetworkBoundResource<BlogListSearchResponse, List<BlogPost>, BlogViewState>(
             sessionManager.isConnectedToTheInternet(),
             true,
@@ -63,6 +69,7 @@ class BlogRepository
                 return openApiMainService.searchListBlogPosts(
                     "Token ${authToken.token}",
                     query,
+                    filterAndOrder,
                     page
                 )
             }
@@ -72,7 +79,10 @@ class BlogRepository
             }
 
             override fun loadFromCache(): LiveData<BlogViewState> {
-                return blogPostDao.getAllBlogPosts(query, page)
+                Log.d(TAG, "loadFromCache: filter and order: $filterAndOrder")
+                return blogPostDao.returnOrderedBlogQuery(
+                    query, filterAndOrder, page
+                )
                     .switchMap {
                         object : LiveData<BlogViewState>() {
                             override fun onActive() {

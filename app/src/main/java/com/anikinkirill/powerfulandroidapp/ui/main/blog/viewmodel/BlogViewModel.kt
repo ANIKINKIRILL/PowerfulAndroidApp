@@ -2,6 +2,7 @@ package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import com.anikinkirill.powerfulandroidapp.persitence.BlogQueryUtils
 import com.anikinkirill.powerfulandroidapp.repository.main.BlogRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.BaseViewModel
@@ -11,7 +12,8 @@ import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.*
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
-import com.bumptech.glide.RequestManager
+import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys.Companion.BLOG_FILTER
+import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys.Companion.BLOG_ORDER
 import javax.inject.Inject
 
 class BlogViewModel
@@ -19,8 +21,26 @@ class BlogViewModel
     private val sessionManager: SessionManager,
     private val blogPostRepository: BlogRepository,
     private val sharedPreferences: SharedPreferences,
-    private val requestManager: RequestManager
+    private val editor: SharedPreferences.Editor
 ) : BaseViewModel<BlogStateEvent, BlogViewState>() {
+
+    init {
+        setBlogFilter(
+            sharedPreferences.getString(
+                BLOG_FILTER,
+                BlogQueryUtils.BLOG_FILTER_DATE_UPDATED
+            )
+        )
+
+        sharedPreferences.getString(
+            BLOG_ORDER,
+            BlogQueryUtils.BLOG_ORDER_ASC
+        )?.let { blogOrder ->
+            setBlogOrder(
+                blogOrder
+            )
+        }
+    }
 
     override fun initNewViewState(): BlogViewState {
         return BlogViewState()
@@ -33,6 +53,7 @@ class BlogViewModel
                     blogPostRepository.searchBlogPosts(
                         token,
                         getSearchQuery(),
+                        getBlogOrder() + getBlogFilter(),
                         getPage()
                     )
                 } ?: AbsentLiveData.create()
@@ -55,6 +76,14 @@ class BlogViewModel
                 }
             }
         }
+    }
+
+    fun saveFilterOptions(filter: String, order: String) {
+        editor.putString(BLOG_FILTER, filter)
+        editor.apply()
+
+        editor.putString(BLOG_ORDER, order)
+        editor.apply()
     }
 
     fun cancelActiveJobs() {
