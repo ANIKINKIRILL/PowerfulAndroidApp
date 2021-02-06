@@ -1,5 +1,7 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
+import com.anikinkirill.powerfulandroidapp.models.BlogPost
+
 fun BlogViewModel.getIsQueryExhausted(): Boolean {
     getCurrentViewStateOrNew().let {
         return it.blogFields.isQueryExhausted
@@ -46,4 +48,22 @@ fun BlogViewModel.isAuthorOfBlogPost(): Boolean {
     getCurrentViewStateOrNew().let {
         return it.viewBlogFields.isAuthorOfBlogPost
     }
+}
+
+fun BlogViewModel.getBlogPost(): BlogPost {
+    getCurrentViewStateOrNew().let {
+        return it.viewBlogFields.blogPost ?: getDummyBlogPost()
+    }
+}
+
+private fun getDummyBlogPost(): BlogPost {
+    return BlogPost(
+        -1,
+        "",
+        "",
+        "",
+        "",
+        1,
+        ""
+    )
 }
