@@ -4,13 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
+import com.anikinkirill.powerfulandroidapp.ui.UIMessageType.*
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener {
+abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener, UICommunicationListener {
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -37,6 +38,26 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener
                         handleResponseState(responseEvent)
                     }
                 }
+            }
+        }
+    }
+
+    override fun onUIMessageReceived(uiMessage: UIMessage) {
+        when (uiMessage.uiMessageType) {
+            is AreYouSureDialog -> {
+                displayAreYouSureDialog(
+                    uiMessage.message,
+                    uiMessage.uiMessageType.callback
+                )
+            }
+            is Toast -> {
+                displayToast(uiMessage.message)
+            }
+            is Dialog -> {
+                displayInfoDialog(uiMessage.message)
+            }
+            is None -> {
+                Log.d(TAG, "onUIMessageReceived: ${uiMessage.message}")
             }
         }
     }

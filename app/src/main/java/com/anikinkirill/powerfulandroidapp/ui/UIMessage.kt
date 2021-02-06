@@ -9,7 +9,7 @@ sealed class UIMessageType {
     class Toast : UIMessageType()
     class Dialog : UIMessageType()
     class AreYouSureDialog(
-        callback: AreYouSureCallback
+        val callback: AreYouSureCallback
     ) : UIMessageType()
     class None : UIMessageType()
 }

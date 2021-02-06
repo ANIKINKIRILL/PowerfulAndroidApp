@@ -33,6 +33,15 @@ fun Context.displayErrorDialog(message: String?) {
         }
 }
 
+fun Activity.displayInfoDialog(message: String) {
+    MaterialDialog(this)
+        .show {
+            title(R.string.text_info)
+            message(text = message)
+            positiveButton(R.string.text_ok)
+        }
+}
+
 fun Activity.displayAreYouSureDialog(message: String, callback: AreYouSureCallback) {
     MaterialDialog(this)
         .show {
