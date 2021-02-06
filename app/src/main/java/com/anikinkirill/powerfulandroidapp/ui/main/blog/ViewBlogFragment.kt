@@ -6,11 +6,16 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
+import com.anikinkirill.powerfulandroidapp.ui.AreYouSureCallback
+import com.anikinkirill.powerfulandroidapp.ui.UIMessage
+import com.anikinkirill.powerfulandroidapp.ui.UIMessageType
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.CheckAuthorOfBlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.DeleteBlogPostEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.isAuthorOfBlogPost
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.removeDeletedBlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
 import com.anikinkirill.powerfulandroidapp.util.DateUtils
+import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 class ViewBlogFragment : BaseBlogFragment() {
@@ -31,7 +36,7 @@ class ViewBlogFragment : BaseBlogFragment() {
         onDataStateChangeListener.expandAppBar()
 
         delete_button.setOnClickListener {
-            deleteBlogPost()
+            confirmDeleteRequest()
         }
     }
 
@@ -44,6 +49,25 @@ class ViewBlogFragment : BaseBlogFragment() {
         viewModel.setStateEvent(DeleteBlogPostEvent())
     }
 
+    private fun confirmDeleteRequest() {
+        val callback = object : AreYouSureCallback {
+            override fun proceed() {
+                deleteBlogPost()
+            }
+            override fun cancel() {
+                // ignore this case
+            }
+        }
+        uiCommunicationListener.onUIMessageReceived(
+            uiMessage = UIMessage(
+                message = getString(R.string.are_you_sure_delete),
+                uiMessageType = UIMessageType.AreYouSureDialog(
+                    callback
+                )
+            )
+        )
+    }
+
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             onDataStateChangeListener.onDataStateChange(dataState)
@@ -52,6 +76,12 @@ class ViewBlogFragment : BaseBlogFragment() {
                     viewModel.setIsAuthorOfBlogPost(
                         viewState.viewBlogFields.isAuthorOfBlogPost
                     )
+                }
+                data.response?.peekContent()?.let { response ->
+                    if (response.message == SUCCESS_BLOG_DELETED) {
+                        viewModel.removeDeletedBlogPost()
+                        findNavController().popBackStack()
+                    }
                 }
             }
         })
