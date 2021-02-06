@@ -14,12 +14,16 @@ import com.anikinkirill.powerfulandroidapp.repository.JobManager
 import com.anikinkirill.powerfulandroidapp.repository.NetworkBoundResource
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.DataState
+import com.anikinkirill.powerfulandroidapp.ui.Response
+import com.anikinkirill.powerfulandroidapp.ui.ResponseType
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState.BlogFields
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState.ViewBlogFields
 import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import com.anikinkirill.powerfulandroidapp.util.Constants.Companion.PAGINATION_PAGE_SIZE
+import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
 import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.RESPONSE_HAS_PERMISSION_TO_EDIT
+import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -172,6 +176,69 @@ class BlogRepository
             // not used in this case
             override suspend fun updateLocalDb(cacheObject: Any?) {
                 TODO("Not yet implemented")
+            }
+        }.asLiveData()
+    }
+
+    fun deleteBlogPost(
+        authToken: AuthToken,
+        blogPost: BlogPost
+    ): LiveData<DataState<BlogViewState>> {
+        return object : NetworkBoundResource<GenericResponse, BlogPost, BlogViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+            // not used in this case
+            override suspend fun createCacheRequestAndReturn() {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiResponse.ApiSuccessResponse<GenericResponse>) {
+                if (response.body.response == SUCCESS_BLOG_DELETED) {
+                    updateLocalDb(blogPost)
+                } else {
+                    onCompleteJob(
+                        DataState.error(
+                            response = Response(
+                                ERROR_UNKNOWN,
+                                ResponseType.Dialog()
+                            )
+                        )
+                    )
+                }
+            }
+
+            override fun createCall(): LiveData<ApiResponse<GenericResponse>> {
+               return openApiMainService.deleteBlogPost(
+                    authorization = "Token ${authToken.token}",
+                    slug = blogPost.slug
+                )
+            }
+
+            override fun setJob(job: Job) {
+                addJob("deleteBlogPost", job)
+            }
+
+            // not used in this case
+            override fun loadFromCache(): LiveData<BlogViewState> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun updateLocalDb(cacheObject: BlogPost?) {
+                cacheObject?.let { blogPost ->
+                    blogPostDao.deleteBlogPost(blogPost)
+                    onCompleteJob(
+                        DataState.data(
+                            null,
+                            Response(
+                                SUCCESS_BLOG_DELETED,
+                                ResponseType.Toast()
+                            )
+                        )
+                    )
+                }
             }
         }.asLiveData()
     }
