@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.CheckAuthorOfBlogPost
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.DeleteBlogPostEvent
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.isAuthorOfBlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
 import com.anikinkirill.powerfulandroidapp.util.DateUtils
@@ -28,11 +29,19 @@ class ViewBlogFragment : BaseBlogFragment() {
         subscribeObservers()
         checkIsAuthorOfBlogPost()
         onDataStateChangeListener.expandAppBar()
+
+        delete_button.setOnClickListener {
+            deleteBlogPost()
+        }
     }
 
     private fun checkIsAuthorOfBlogPost() {
         viewModel.setIsAuthorOfBlogPost(false) // reset
         viewModel.setStateEvent(CheckAuthorOfBlogPost())
+    }
+
+    private fun deleteBlogPost() {
+        viewModel.setStateEvent(DeleteBlogPostEvent())
     }
 
     private fun subscribeObservers() {
