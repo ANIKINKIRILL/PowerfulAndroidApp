@@ -68,6 +68,15 @@ class BlogViewModel
                } ?: AbsentLiveData.create()
             }
 
+            is DeleteBlogPostEvent -> {
+                sessionManager.cachedToken.value?.let { token ->
+                    blogPostRepository.deleteBlogPost(
+                        token,
+                        getBlogPost()
+                    )
+                } ?: AbsentLiveData.create()
+            }
+
             is None -> {
                 return object : LiveData<DataState<BlogViewState>>() {
                     override fun onActive() {
