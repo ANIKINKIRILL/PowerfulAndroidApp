@@ -39,4 +39,10 @@ interface OpenApiMainService {
         @Query("page") page: Int
     ): LiveData<ApiResponse<BlogListSearchResponse>>
 
+    @GET("api/blog/{slug}/is_author")
+    fun isAuthorOfBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug: String
+    ): LiveData<ApiResponse<GenericResponse>>
+
 }
