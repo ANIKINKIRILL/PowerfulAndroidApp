@@ -41,3 +41,9 @@ fun BlogViewModel.getSlug(): String {
         return it.viewBlogFields.blogPost?.slug ?: ""
     }
 }
+
+fun BlogViewModel.isAuthorOfBlogPost(): Boolean {
+    getCurrentViewStateOrNew().let {
+        return it.viewBlogFields.isAuthorOfBlogPost
+    }
+}
