@@ -60,7 +60,12 @@ class BlogViewModel
             }
 
             is CheckAuthorOfBlogPost -> {
-               return AbsentLiveData.create()
+               sessionManager.cachedToken.value?.let { token ->
+                   blogPostRepository.isAuthorOfBlogPost(
+                       token,
+                       getSlug()
+                   )
+               } ?: AbsentLiveData.create()
             }
 
             is None -> {

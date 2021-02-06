@@ -35,3 +35,9 @@ fun BlogViewModel.getBlogOrder(): String {
         return it.blogFields.order
     }
 }
+
+fun BlogViewModel.getSlug(): String {
+    getCurrentViewStateOrNew().let {
+        return it.viewBlogFields.blogPost?.slug ?: ""
+    }
+}
