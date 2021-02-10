@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.ui
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -32,3 +33,30 @@ fun Context.displayErrorDialog(message: String?) {
         }
 }
 
+fun Activity.displayInfoDialog(message: String) {
+    MaterialDialog(this)
+        .show {
+            title(R.string.text_info)
+            message(text = message)
+            positiveButton(R.string.text_ok)
+        }
+}
+
+fun Activity.displayAreYouSureDialog(message: String, callback: AreYouSureCallback) {
+    MaterialDialog(this)
+        .show {
+            title(R.string.are_you_sure)
+            message(text = message)
+            negativeButton(R.string.text_cancel) {
+                callback.cancel()
+            }
+            positiveButton(R.string.text_yes) {
+                callback.proceed()
+            }
+        }
+}
+
+interface AreYouSureCallback {
+    fun proceed()
+    fun cancel()
+}

@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
+import com.anikinkirill.powerfulandroidapp.ui.UICommunicationListener
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.BlogViewModel
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import com.bumptech.glide.RequestManager
@@ -35,6 +36,8 @@ abstract class BaseBlogFragment : DaggerFragment() {
 
     lateinit var onDataStateChangeListener: DataStateChangeListener
 
+    lateinit var uiCommunicationListener: UICommunicationListener
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.blogFragment, activity as AppCompatActivity)
@@ -57,6 +60,12 @@ abstract class BaseBlogFragment : DaggerFragment() {
         super.onAttach(context)
         try{
             onDataStateChangeListener = context as DataStateChangeListener
+        }catch (e: Exception) {
+            Log.d(TAG, "onAttach: ${e.message}")
+        }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
         }catch (e: Exception) {
             Log.d(TAG, "onAttach: ${e.message}")
         }
