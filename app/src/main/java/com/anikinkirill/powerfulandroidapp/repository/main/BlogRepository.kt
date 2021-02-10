@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
 import com.anikinkirill.powerfulandroidapp.api.GenericResponse
 import com.anikinkirill.powerfulandroidapp.api.main.OpenApiMainService
+import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogCreateUpdateResponse
 import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogListSearchResponse
 import com.anikinkirill.powerfulandroidapp.models.AuthToken
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
@@ -28,6 +29,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class BlogRepository
@@ -237,6 +240,73 @@ class BlogRepository
                                 ResponseType.Toast()
                             )
                         )
+                    )
+                }
+            }
+        }.asLiveData()
+    }
+
+    fun updateBlogPost(
+        authToken: AuthToken,
+        slug: String,
+        title: RequestBody,
+        body: RequestBody,
+        image: MultipartBody.Part?
+    ): LiveData<DataState<BlogViewState>> {
+        return object : NetworkBoundResource<BlogCreateUpdateResponse, BlogPost, BlogViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+            // not used in this case
+            override suspend fun createCacheRequestAndReturn() {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiResponse.ApiSuccessResponse<BlogCreateUpdateResponse>) {
+                val updatedBlogPost = BlogPost(response.body)
+                updateLocalDb(updatedBlogPost)
+                withContext(Dispatchers.Main) {
+                    onCompleteJob(
+                        DataState.data(
+                            data = BlogViewState(
+                                viewBlogFields = ViewBlogFields(
+                                    blogPost = updatedBlogPost
+                                )
+                            ),
+                            response = Response(response.body.response, ResponseType.Toast())
+                        )
+                    )
+                }
+            }
+
+            override fun createCall(): LiveData<ApiResponse<BlogCreateUpdateResponse>> {
+                return openApiMainService.updateBlog(
+                    authorization = "Token ${authToken.token}",
+                    slug = slug,
+                    title = title,
+                    body = body,
+                    image = image
+                )
+            }
+
+            override fun setJob(job: Job) {
+                addJob("updateBlogPost", job)
+            }
+
+            // not used in this case
+            override fun loadFromCache(): LiveData<BlogViewState> {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun updateLocalDb(cacheObject: BlogPost?) {
+                cacheObject?.let {
+                    blogPostDao.updateBlogPost(
+                        it.pk,
+                        it.title,
+                        it.body,
+                        it.image
                     )
                 }
             }
