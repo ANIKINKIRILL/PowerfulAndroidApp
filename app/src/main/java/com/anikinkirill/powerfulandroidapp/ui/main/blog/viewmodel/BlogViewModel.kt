@@ -14,6 +14,8 @@ import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogViewState
 import com.anikinkirill.powerfulandroidapp.util.AbsentLiveData
 import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.anikinkirill.powerfulandroidapp.util.PreferenceKeys.Companion.BLOG_ORDER
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class BlogViewModel
@@ -73,6 +75,26 @@ class BlogViewModel
                     blogPostRepository.deleteBlogPost(
                         token,
                         getBlogPost()
+                    )
+                } ?: AbsentLiveData.create()
+            }
+
+            is UpdatedBlogPostEvent -> {
+                sessionManager.cachedToken.value?.let { token ->
+                    val title = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        event.title
+                    )
+                    val body = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        event.body
+                    )
+                    blogPostRepository.updateBlogPost(
+                        token,
+                        getSlug(),
+                        title,
+                        body,
+                        event.image
                     )
                 } ?: AbsentLiveData.create()
             }
