@@ -61,6 +61,6 @@ interface OpenApiMainService {
         @Path("slug") slug: String,
         @Part("title") title: RequestBody,
         @Part("body") body: RequestBody,
-        @Part("image") image: MultipartBody.Part?
+        @Part image: MultipartBody.Part?
     ): LiveData<ApiResponse<BlogCreateUpdateResponse>>
 }

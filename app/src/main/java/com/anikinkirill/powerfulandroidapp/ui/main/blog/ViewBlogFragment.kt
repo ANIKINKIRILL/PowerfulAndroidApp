@@ -1,7 +1,10 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.anikinkirill.powerfulandroidapp.R
@@ -11,13 +14,12 @@ import com.anikinkirill.powerfulandroidapp.ui.UIMessage
 import com.anikinkirill.powerfulandroidapp.ui.UIMessageType
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.CheckAuthorOfBlogPost
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.state.BlogStateEvent.DeleteBlogPostEvent
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.isAuthorOfBlogPost
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.removeDeletedBlogPost
-import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel.*
 import com.anikinkirill.powerfulandroidapp.util.DateUtils
 import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
+@SuppressLint("LongLogTag")
 class ViewBlogFragment : BaseBlogFragment() {
 
     override fun onCreateView(
@@ -131,7 +133,16 @@ class ViewBlogFragment : BaseBlogFragment() {
     }
 
     private fun navigateToUpdateBlogFragment() {
-        findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
+        try {
+            viewModel.setUpdatedBlogFields(
+                title = viewModel.getBlogPost().title,
+                body = viewModel.getBlogPost().body,
+                image = viewModel.getBlogPost().image.toUri()
+            )
+            findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception: ${e.message}")
+        }
     }
 
 }
