@@ -3,6 +3,7 @@ package com.anikinkirill.powerfulandroidapp.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogCreateUpdateResponse
 import com.anikinkirill.powerfulandroidapp.api.main.responses.BlogSearchResponse
 import com.anikinkirill.powerfulandroidapp.util.DateUtils
 
@@ -32,6 +33,16 @@ data class BlogPost(
 ) {
 
     constructor(response: BlogSearchResponse): this (
+        response.pk,
+        response.title,
+        response.slug,
+        response.body,
+        response.image,
+        DateUtils.convertServerStringDateToLong(response.date_updated),
+        response.username
+    )
+
+    constructor(response: BlogCreateUpdateResponse): this (
         response.pk,
         response.title,
         response.slug,
