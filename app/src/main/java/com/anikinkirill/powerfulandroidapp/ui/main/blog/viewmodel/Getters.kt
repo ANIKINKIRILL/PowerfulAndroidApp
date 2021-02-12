@@ -1,5 +1,6 @@
 package com.anikinkirill.powerfulandroidapp.ui.main.blog.viewmodel
 
+import android.net.Uri
 import com.anikinkirill.powerfulandroidapp.models.BlogPost
 
 fun BlogViewModel.getIsQueryExhausted(): Boolean {
@@ -66,4 +67,13 @@ private fun getDummyBlogPost(): BlogPost {
         1,
         ""
     )
+}
+
+fun BlogViewModel.getUpdatedBlogUri(): Uri? {
+    getCurrentViewStateOrNew().let {
+        it.updateBlogFields.updatedImageUri?.let {
+            return it
+        }
+    }
+    return null
 }
