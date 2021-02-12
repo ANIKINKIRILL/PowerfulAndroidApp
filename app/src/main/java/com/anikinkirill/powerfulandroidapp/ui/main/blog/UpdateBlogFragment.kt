@@ -27,6 +27,7 @@ class UpdateBlogFragment : BaseBlogFragment() {
 
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            onDataStateChangeListener.onDataStateChange(dataState)
             dataState.data?.let { data ->
                 data.data?.getContentIfNotHandled()?.let { viewState ->
                     viewState.viewBlogFields.blogPost?.let { blogPost ->
