@@ -24,6 +24,7 @@ import com.anikinkirill.powerfulandroidapp.util.ApiResponse
 import com.anikinkirill.powerfulandroidapp.util.Constants.Companion.PAGINATION_PAGE_SIZE
 import com.anikinkirill.powerfulandroidapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
 import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.RESPONSE_HAS_PERMISSION_TO_EDIT
+import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.RESPONSE_MUST_BECOME_CODINGWITHMITCH_MEMBER
 import com.anikinkirill.powerfulandroidapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -265,19 +266,36 @@ class BlogRepository
             }
 
             override suspend fun handleApiSuccessResponse(response: ApiResponse.ApiSuccessResponse<BlogCreateUpdateResponse>) {
-                val updatedBlogPost = BlogPost(response.body)
-                updateLocalDb(updatedBlogPost)
-                withContext(Dispatchers.Main) {
-                    onCompleteJob(
-                        DataState.data(
-                            data = BlogViewState(
-                                viewBlogFields = ViewBlogFields(
-                                    blogPost = updatedBlogPost
-                                )
-                            ),
-                            response = Response(response.body.response, ResponseType.Toast())
+                var isMember = true
+                if (response.body.response == RESPONSE_MUST_BECOME_CODINGWITHMITCH_MEMBER) {
+                    isMember = false
+                }
+                if (isMember) {
+                    val updatedBlogPost = BlogPost(response.body)
+                    updateLocalDb(updatedBlogPost)
+                    withContext(Dispatchers.Main) {
+                        onCompleteJob(
+                            DataState.data(
+                                data = BlogViewState(
+                                    viewBlogFields = ViewBlogFields(
+                                        blogPost = updatedBlogPost
+                                    )
+                                ),
+                                response = Response(response.body.response, ResponseType.Toast())
+                            )
                         )
-                    )
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        onCompleteJob(
+                            DataState.error(
+                                response = Response(
+                                    response.body.response,
+                                    ResponseType.Toast()
+                                )
+                            )
+                        )
+                    }
                 }
             }
 
