@@ -94,3 +94,13 @@ fun BlogViewModel.updateListItem(newBlogPost: BlogPost) {
     update.blogFields.blogList = list
     setViewState(update)
 }
+
+fun BlogViewModel.onBlogPostUpdateSuccess(blogPost: BlogPost) {
+    setUpdatedBlogFields(
+        title = blogPost.title,
+        body = blogPost.body,
+        image = null
+    ) // for updating UpdateBlogFragment
+    setBlogPost(blogPost) // for updating ViewBlogFragment
+    updateListItem(blogPost) // for updating BlogFragment
+}
