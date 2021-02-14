@@ -6,6 +6,7 @@ import com.anikinkirill.powerfulandroidapp.persitence.AppDatabase
 import com.anikinkirill.powerfulandroidapp.persitence.BlogPostDao
 import com.anikinkirill.powerfulandroidapp.repository.main.AccountRepository
 import com.anikinkirill.powerfulandroidapp.repository.main.BlogRepository
+import com.anikinkirill.powerfulandroidapp.repository.main.CreateBlogRepository
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -46,4 +47,13 @@ class MainModule {
         return BlogRepository(openApiMainService, blogPostDao, sessionManager)
     }
 
+    @MainScope
+    @Provides
+    fun provideCreateBlogRepository(
+        openApiMainService: OpenApiMainService,
+        blogPostDao: BlogPostDao,
+        sessionManager: SessionManager
+    ) : CreateBlogRepository {
+        return CreateBlogRepository(openApiMainService, blogPostDao, sessionManager)
+    }
 }

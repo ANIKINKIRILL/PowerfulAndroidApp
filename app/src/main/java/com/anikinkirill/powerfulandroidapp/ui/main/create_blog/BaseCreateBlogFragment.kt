@@ -6,12 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.anikinkirill.powerfulandroidapp.R
 import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
+import com.anikinkirill.powerfulandroidapp.ui.UICommunicationListener
+import com.anikinkirill.powerfulandroidapp.ui.main.blog.BaseBlogFragment
+import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 @SuppressLint("LongLogTag")
 abstract class BaseCreateBlogFragment : DaggerFragment() {
@@ -20,11 +25,26 @@ abstract class BaseCreateBlogFragment : DaggerFragment() {
         const val TAG = "AppDebug_BaseCreateBlogFragment"
     }
 
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
     lateinit var onDataStateChangeListener: DataStateChangeListener
+
+    lateinit var uiCommunicationListener: UICommunicationListener
+
+    lateinit var viewModel: CreateBlogViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.createBlogFragment, activity as AppCompatActivity)
+        viewModel = activity?.run {
+            ViewModelProvider(this, providerFactory).get(CreateBlogViewModel::class.java)
+        } ?: throw Exception("Invalid activity")
+        cancelActiveJobs()
+    }
+
+    private fun cancelActiveJobs() {
+        viewModel.cancelActiveJobs()
     }
 
     private fun setupActionBarWithNavController(fragmentId: Int, activity: AppCompatActivity) {
@@ -43,6 +63,11 @@ abstract class BaseCreateBlogFragment : DaggerFragment() {
         }catch (e: Exception) {
             Log.d(TAG, "onAttach: ${e.message}")
         }
-    }
 
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch (e: Exception) {
+            Log.d(BaseBlogFragment.TAG, "onAttach: ${e.message}")
+        }
+    }
 }
