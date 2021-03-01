@@ -15,6 +15,7 @@ import com.anikinkirill.powerfulandroidapp.ui.DataStateChangeListener
 import com.anikinkirill.powerfulandroidapp.ui.UICommunicationListener
 import com.anikinkirill.powerfulandroidapp.ui.main.blog.BaseBlogFragment
 import com.anikinkirill.powerfulandroidapp.viewmodels.ViewModelProviderFactory
+import com.bumptech.glide.RequestManager
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -24,6 +25,9 @@ abstract class BaseCreateBlogFragment : DaggerFragment() {
     companion object {
         const val TAG = "AppDebug_BaseCreateBlogFragment"
     }
+
+    @Inject
+    lateinit var requestManager: RequestManager
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
