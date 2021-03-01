@@ -111,4 +111,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener
         }
     }
 
+    override fun isStoragePermissionGranted(): Boolean {
+        return false
+    }
 }
