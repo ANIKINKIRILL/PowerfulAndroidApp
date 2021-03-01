@@ -1,10 +1,15 @@
 package com.anikinkirill.powerfulandroidapp.ui
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.anikinkirill.powerfulandroidapp.session.SessionManager
 import com.anikinkirill.powerfulandroidapp.ui.UIMessageType.*
+import com.anikinkirill.powerfulandroidapp.util.Constants
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
@@ -111,4 +116,23 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener
         }
     }
 
+    override fun isStoragePermissionGranted(): Boolean {
+        if (
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                Constants.PERMISSION_REQUEST_READ_STORAGE
+            )
+            return false
+        } else {
+            return true
+        }
+    }
 }
